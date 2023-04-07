@@ -1,12 +1,15 @@
 <template>
-    <div ref="container" :class="containerClass">
+    <div ref="container" :class="containerClass" v-bind="ptm('root')">
         <slot></slot>
     </div>
 </template>
 
 <script>
+import BaseComponent from 'primevue/basecomponent';
+
 export default {
     name: 'SplitterPanel',
+    extends: BaseComponent,
     props: {
         size: {
             type: Number,

@@ -15,7 +15,12 @@
                 <div v-ripple class="p-cascadeselect-item-content" @click="onOptionClick($event, processedOption)">
                     <component v-if="templates['option']" :is="templates['option']" :option="processedOption.option" />
                     <span v-else class="p-cascadeselect-item-text">{{ getOptionLabelToRender(processedOption) }}</span>
-                    <span v-if="isOptionGroup(processedOption)" :class="['p-cascadeselect-group-icon', optionGroupIcon]" aria-hidden="true"></span>
+                    <component
+                        v-if="isOptionGroup(processedOption)"
+                        :is="templates['optiongroupicon'] ? templates['optiongroupicon'] : optionGroupIcon ? 'span' : 'AngleRightIcon'"
+                        :class="['p-cascadeselect-group-icon', optionGroupIcon]"
+                        aria-hidden="true"
+                    />
                 </div>
                 <CascadeSelectSub
                     v-if="isOptionGroup(processedOption) && isOptionActive(processedOption)"
@@ -41,6 +46,7 @@
 </template>
 
 <script>
+import AngleRightIcon from 'primevue/icon/angleright';
 import Ripple from 'primevue/ripple';
 import { DomHandler, ObjectUtils } from 'primevue/utils';
 
@@ -131,6 +137,9 @@ export default {
     },
     directives: {
         ripple: Ripple
+    },
+    components: {
+        AngleRightIcon: AngleRightIcon
     }
 };
 </script>

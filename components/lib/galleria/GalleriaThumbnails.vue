@@ -2,7 +2,7 @@
     <div class="p-galleria-thumbnail-wrapper">
         <div class="p-galleria-thumbnail-container">
             <button v-if="showThumbnailNavigators" v-ripple :class="navBackwardClass" :disabled="isNavBackwardDisabled()" type="button" :aria-label="ariaPrevButtonLabel" @click="navBackward($event)" v-bind="prevButtonProps">
-                <span :class="navBackwardIconClass"></span>
+                <component :is="templates.prevthumbnailicon || (isVertical ? 'ChevronUpIcon' : 'ChevronLeftIcon')" class="p-galleria-thumbnail-prev-icon" />
             </button>
             <div class="p-galleria-thumbnail-items-container" :style="{ height: isVertical ? contentHeight : '' }">
                 <div ref="itemsContainer" class="p-galleria-thumbnail-items" role="tablist" @transitionend="onTransitionEnd" @touchstart="onTouchStart($event)" @touchmove="onTouchMove($event)" @touchend="onTouchEnd($event)">
@@ -30,13 +30,17 @@
                 </div>
             </div>
             <button v-if="showThumbnailNavigators" v-ripple :class="navForwardClass" :disabled="isNavForwardDisabled()" type="button" :aria-label="ariaNextButtonLabel" @click="navForward($event)" v-bind="nextButtonProps">
-                <span :class="navForwardIconClass"></span>
+                <component :is="templates.nextthumbnailicon || (isVertical ? 'ChevronDownIcon' : 'ChevronRightIcon')" class="p-galleria-thumbnail-prev-icon" />
             </button>
         </div>
     </div>
 </template>
 
 <script>
+import ChevronDownIcon from 'primevue/icon/chevrondown';
+import ChevronLeftIcon from 'primevue/icon/chevronleft';
+import ChevronRightIcon from 'primevue/icon/chevronright';
+import ChevronUpIcon from 'primevue/icon/chevronup';
 import Ripple from 'primevue/ripple';
 import { DomHandler } from 'primevue/utils';
 
@@ -501,30 +505,18 @@ export default {
                 }
             ];
         },
-        navBackwardIconClass() {
-            return [
-                'p-galleria-thumbnail-prev-icon pi',
-                {
-                    'pi-chevron-left': !this.isVertical,
-                    'pi-chevron-up': this.isVertical
-                }
-            ];
-        },
-        navForwardIconClass() {
-            return [
-                'p-galleria-thumbnail-next-icon pi',
-                {
-                    'pi-chevron-right': !this.isVertical,
-                    'pi-chevron-down': this.isVertical
-                }
-            ];
-        },
         ariaPrevButtonLabel() {
             return this.$primevue.config.locale.aria ? this.$primevue.config.locale.aria.prevPageLabel : undefined;
         },
         ariaNextButtonLabel() {
             return this.$primevue.config.locale.aria ? this.$primevue.config.locale.aria.nextPageLabel : undefined;
         }
+    },
+    components: {
+        ChevronLeftIcon: ChevronLeftIcon,
+        ChevronRightIcon: ChevronRightIcon,
+        ChevronUpIcon: ChevronUpIcon,
+        ChevronDownIcon: ChevronDownIcon
     },
     directives: {
         ripple: Ripple

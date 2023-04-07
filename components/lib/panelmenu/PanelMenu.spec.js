@@ -66,18 +66,6 @@ describe('PanelMenu', () => {
         expect(wrapper.findAll('.p-submenu-list').length).toBe(3);
     });
 
-    it('should toggle', async () => {
-        expect(wrapper.findAll('.p-toggleable-content')[0].attributes().style).toBe('display: none;');
-
-        await wrapper.vm.onHeaderClick({}, wrapper.vm.model[0]);
-
-        expect(wrapper.find('.p-panelmenu-header-action > .p-submenu-icon').classes()).toContain('pi-chevron-down');
-
-        setTimeout(() => {
-            expect(wrapper.findAll('.p-toggleable-content')[0].attributes().style).toBe('');
-        }, 25);
-    });
-
     it('should update expandedKeys', async () => {
         await wrapper.setProps({ expandedKeys: { 2: true } });
 

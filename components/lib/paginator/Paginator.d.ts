@@ -2,7 +2,7 @@
  *
  * Paginator is a generic component to display content in paged format.
  *
- * - [Paginator](https://primevue.org/paginator)
+ * [Live Demo](https://primevue.org/paginator)
  *
  * @module paginator
  *
@@ -120,6 +120,22 @@ export interface PaginatorSlots {
          */
         state: PageState;
     }): VNode[];
+    /**
+     * Custom first page link icon template.
+     */
+    firstpagelinkicon(): VNode[];
+    /**
+     * Custom previous page link icon template.
+     */
+    prevpagelinkicon(): VNode[];
+    /**
+     * Custom finextrst page link icon template.
+     */
+    nextpagelinkicon(): VNode[];
+    /**
+     * Custom last page link icon template.
+     */
+    lastpagelinkicon(): VNode[];
 }
 
 /**

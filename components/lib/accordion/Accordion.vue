@@ -1,7 +1,7 @@
 <template>
-    <div class="p-accordion p-component">
-        <div v-for="(tab, i) of tabs" :key="getKey(tab, i)" :class="getTabClass(i)" :data-index="i">
-            <div :style="getTabProp(tab, 'headerStyle')" :class="getTabHeaderClass(tab, i)" v-bind="getTabProp(tab, 'headerProps')">
+    <div class="p-accordion p-component" v-bind="ptm('root')">
+        <div v-for="(tab, i) of tabs" :key="getKey(tab, i)" :class="getTabClass(i)" :data-index="i" v-bind="getTabPT(tab, 'root')">
+            <div :style="getTabProp(tab, 'headerStyle')" :class="getTabHeaderClass(tab, i)" v-bind="{ ...getTabProp(tab, 'headerProps'), ...getTabPT(tab, 'header') }">
                 <a
                     :id="getTabHeaderActionId(i)"
                     class="p-accordion-header-link p-accordion-header-action"
@@ -12,10 +12,12 @@
                     :aria-controls="getTabContentId(i)"
                     @click="onTabClick($event, tab, i)"
                     @keydown="onTabKeyDown($event, tab, i)"
-                    v-bind="getTabProp(tab, 'headerActionProps')"
+                    v-bind="{ ...getTabProp(tab, 'headeractionprops'), ...getTabPT(tab, 'headeraction') }"
                 >
-                    <span :class="getTabHeaderIconClass(i)" aria-hidden="true"></span>
-                    <span v-if="tab.props && tab.props.header" class="p-accordion-header-text">{{ tab.props.header }}</span>
+                    <component v-if="tab.children && tab.children.headericon" :is="tab.children.headericon" :isTabActive="isTabActive(i)" :index="i"></component>
+                    <component v-else-if="isTabActive(i)" :is="collapseIcon ? 'span' : 'ChevronDownIcon'" :class="['p-accordion-toggle-icon', collapseIcon]" aria-hidden="true" v-bind="getTabPT(tab, 'headericon')" />
+                    <component v-else :is="expandIcon ? 'span' : 'ChevronRightIcon'" :class="['p-accordion-toggle-icon', expandIcon]" aria-hidden="true" v-bind="getTabPT(tab, 'headericon')" />
+                    <span v-if="tab.props && tab.props.header" class="p-accordion-header-text" v-bind="getTabPT(tab, 'headertitle')">{{ tab.props.header }}</span>
                     <component v-if="tab.children && tab.children.header" :is="tab.children.header"></component>
                 </a>
             </div>
@@ -28,9 +30,9 @@
                     :class="getTabContentClass(tab)"
                     role="region"
                     :aria-labelledby="getTabHeaderActionId(i)"
-                    v-bind="getTabProp(tab, 'contentProps')"
+                    v-bind="{ ...getTabProp(tab, 'contentProps'), ...getTabPT(tab, 'toggleablecontent') }"
                 >
-                    <div class="p-accordion-content">
+                    <div class="p-accordion-content" v-bind="getTabPT(tab, 'content')">
                         <component :is="tab"></component>
                     </div>
                 </div>
@@ -40,11 +42,15 @@
 </template>
 
 <script>
+import BaseComponent from 'primevue/basecomponent';
+import ChevronDownIcon from 'primevue/icon/chevrondown';
+import ChevronRightIcon from 'primevue/icon/chevronright';
 import Ripple from 'primevue/ripple';
 import { DomHandler, UniqueComponentId } from 'primevue/utils';
 
 export default {
     name: 'Accordion',
+    extends: BaseComponent,
     emits: ['update:activeIndex', 'tab-open', 'tab-close', 'tab-click'],
     props: {
         multiple: {
@@ -61,11 +67,11 @@ export default {
         },
         expandIcon: {
             type: String,
-            default: 'pi pi-chevron-right'
+            default: undefined
         },
         collapseIcon: {
             type: String,
-            default: 'pi pi-chevron-down'
+            default: undefined
         },
         tabindex: {
             type: Number,
@@ -111,6 +117,15 @@ export default {
         },
         getTabContentId(index) {
             return `${this.id}_${index}_content`;
+        },
+        getTabPT(tab, key) {
+            return this.ptmo(this.getTabProp(tab, 'pt'), key, {
+                props: tab.props,
+                parent: {
+                    props: this.$props,
+                    state: this.$data
+                }
+            });
         },
         onTabClick(event, tab, index) {
             this.changeActiveIndex(event, tab, index);
@@ -240,9 +255,6 @@ export default {
                 }
             ];
         },
-        getTabHeaderIconClass(i) {
-            return ['p-accordion-toggle-icon', this.isTabActive(i) ? this.collapseIcon : this.expandIcon];
-        },
         getTabContentClass(tab) {
             return ['p-toggleable-content', this.getTabProp(tab, 'contentClass')];
         }
@@ -263,6 +275,10 @@ export default {
                 return tabs;
             }, []);
         }
+    },
+    components: {
+        ChevronDownIcon,
+        ChevronRightIcon
     },
     directives: {
         ripple: Ripple

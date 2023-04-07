@@ -3,8 +3,11 @@
 </template>
 
 <script>
+import BaseComponent from 'primevue/basecomponent';
+
 export default {
     name: 'AccordionTab',
+    extends: BaseComponent,
     props: {
         header: null,
         headerStyle: null,

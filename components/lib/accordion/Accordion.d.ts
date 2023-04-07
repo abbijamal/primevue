@@ -10,6 +10,15 @@
 import { VNode } from 'vue';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
+export declare type AccordionPassThroughOptionType = AccordionPassThroughAttributes | ((options: AccordionPassThroughMethodOptions) => AccordionPassThroughAttributes) | null | undefined;
+
+/**
+ * Custom passthrough(pt) option method.
+ */
+export interface AccordionPassThroughMethodOptions {
+    props: AccordionProps;
+    state: AccordionState;
+}
 /**
  * Custom tab open event.
  * @see {@link AccordionEmits.tab-open}
@@ -41,6 +50,38 @@ export interface AccordionTabCloseEvent extends AccordionTabOpenEvent {}
 export interface AccordionClickEvent extends AccordionTabOpenEvent {}
 
 /**
+ * Custom passthrough(pt) options.
+ * @see {@link AccordionProps.pt}
+ */
+export interface AccordionPassThroughOptions {
+    /**
+     * Uses to pass attributes to the root's DOM element.
+     */
+    root?: AccordionPassThroughOptionType;
+}
+
+/**
+ * Custom passthrough attributes for each DOM elements
+ */
+export interface AccordionPassThroughAttributes {
+    [key: string]: any;
+}
+
+/**
+ * Defines current inline state in Accordion component.
+ */
+export interface AccordionState {
+    /**
+     * Current id state as a string
+     */
+    id: string;
+    /**
+     * Current active index state.
+     */
+    d_activeIndex: number | number[];
+}
+
+/**
  * Defines valid properties in Accordion component.
  */
 export interface AccordionProps {
@@ -61,12 +102,10 @@ export interface AccordionProps {
     lazy?: boolean | undefined;
     /**
      * Icon of a collapsed tab.
-     * @defaultValue pi pi-chevron-right
      */
     expandIcon?: string | undefined;
     /**
      * Icon of an expanded tab.
-     * @defaultValue pi pi-chevron-down
      */
     collapseIcon?: string | undefined;
     /**
@@ -79,6 +118,11 @@ export interface AccordionProps {
      * @defaultValue false
      */
     selectOnFocus?: boolean | undefined;
+    /**
+     * Uses to pass attributes to DOM elements inside the component.
+     * @type {AccordionPassThroughOptions}
+     */
+    pt?: AccordionPassThroughOptions;
 }
 
 /**
