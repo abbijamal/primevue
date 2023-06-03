@@ -1,29 +1,33 @@
 <template>
     <PanelMenuSub
         :id="panelId + '_list'"
-        class="p-panelmenu-root-list"
+        :class="cx('menu')"
         role="tree"
         :tabindex="-1"
         :aria-activedescendant="focused ? focusedItemId : undefined"
         :panelId="panelId"
         :focusedItemId="focused ? focusedItemId : undefined"
         :items="processedItems"
-        :template="template"
+        :templates="templates"
         :activeItemPath="activeItemPath"
         :exact="exact"
         @focus="onFocus"
         @blur="onBlur"
         @keydown="onKeyDown"
         @item-toggle="onItemToggle"
+        :pt="pt"
+        v-bind="ptm('menu')"
     />
 </template>
 
 <script>
+import BaseComponent from 'primevue/basecomponent';
 import { DomHandler, ObjectUtils } from 'primevue/utils';
 import PanelMenuSub from './PanelMenuSub.vue';
 
 export default {
     name: 'PanelMenuList',
+    extends: BaseComponent,
     emits: ['item-toggle', 'header-focus'],
     props: {
         panelId: {
@@ -34,7 +38,7 @@ export default {
             type: Array,
             default: null
         },
-        template: {
+        templates: {
             type: Object,
             default: null
         },
@@ -200,7 +204,7 @@ export default {
         onEnterKey(event) {
             if (ObjectUtils.isNotEmpty(this.focusedItem)) {
                 const element = DomHandler.findSingle(this.$el, `li[id="${`${this.focusedItemId}`}"]`);
-                const anchorElement = element && (DomHandler.findSingle(element, '.p-menuitem-link') || DomHandler.findSingle(element, 'a,button'));
+                const anchorElement = element && (DomHandler.findSingle(element, '[data-pc-section="action"]') || DomHandler.findSingle(element, 'a,button'));
 
                 anchorElement ? anchorElement.click() : element && element.click();
             }
@@ -224,7 +228,7 @@ export default {
             DomHandler.focus(this.$el);
         },
         isElementInPanel(event, element) {
-            const panel = event.currentTarget.closest('.p-panelmenu-panel');
+            const panel = event.currentTarget.closest('[data-pc-section="panel"]');
 
             return panel && panel.contains(element);
         },

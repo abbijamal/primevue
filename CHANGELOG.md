@@ -1,5 +1,90 @@
 # Changelog
 
+[3.29.2](https://github.com/primefaces/primevue/tree/3.29.2) (2023-05-31)
+
+[Full Changelog](https://github.com/primefaces/primevue/compare/3.29.1...3.29.2)
+
+**Fixed bugs:**
+
+- Datatable: Custom checkbox render issue [\#4003](https://github.com/primefaces/primevue/issues/4003)
+
+[3.29.1](https://github.com/primefaces/primevue/tree/3.29.1) (2023-05-15)
+
+[Full Changelog](https://github.com/primefaces/primevue/compare/3.29.0...3.29.1)
+
+**Fixed bugs:**
+
+- SpeedDial: Mask and SpeedDial itself prevent pointer events and speedDial does not close using item slot [\#3945](https://github.com/primefaces/primevue/issues/3945)
+- DataTable: Selection and focus loss when no custom ContextMenu is defined [\#3927](https://github.com/primefaces/primevue/issues/3927)
+- TabMenu: Accessibility issue in TabMenu with hidden tabs [\#3910](https://github.com/primefaces/primevue/issues/3910)
+- Steps: text overflow [\#3631](https://github.com/primefaces/primevue/issues/3631)
+
+## [3.29.0](https://github.com/primefaces/primevue/tree/3.29.0) (2023-05-11)
+
+[Full Changelog](https://github.com/primefaces/primevue/compare/3.28.0...3.29.0)
+
+**Implemented New Features and Enhancements:**
+
+- New passthrough\(pt\) property implementation for Data Components [\#3924](https://github.com/primefaces/primevue/issues/3924)
+- New passthrough\(pt\) property implementation for Form Components [\#3922](https://github.com/primefaces/primevue/issues/3922)
+- New passthrough\(pt\) property implementation for Media Components [\#3918](https://github.com/primefaces/primevue/issues/3918)
+- Image: New `image` and `preview` slots [\#3864](https://github.com/primefaces/primevue/issues/3864)
+- Tooltip Delay option [\#3764](https://github.com/primefaces/primevue/issues/3764)
+- Image: Handling of disabled zoomOut and zoomIn in preview [\#2948](https://github.com/primefaces/primevue/issues/2948)
+
+**Fixed bugs:**
+
+- Calendar: showOnFocus=false does not work [\#3923](https://github.com/primefaces/primevue/issues/3923)
+- OrderList: TypeError with empty list [\#3870](https://github.com/primefaces/primevue/issues/3870)
+
+## [3.28.0](https://github.com/primefaces/primevue/tree/3.28.0) (2023-05-02)
+
+[Full Changelog](https://github.com/primefaces/primevue/compare/3.27.0...3.28.0)
+
+**Implemented New Features and Enhancements:**
+
+- New passthrough\(pt\) property implementation for Chart & FileUpload & Message Components  [\#3911](https://github.com/primefaces/primevue/issues/3911)
+- New passthrough\(pt\) property implementation for Menu Components [\#3907](https://github.com/primefaces/primevue/issues/3907)
+- Button: No label [\#3905](https://github.com/primefaces/primevue/issues/3905)
+- Add global `pt` option to PrimeVue config [\#3902](https://github.com/primefaces/primevue/issues/3902)
+- New passthrough\(pt\) property implementation for Button Components [\#3889](https://github.com/primefaces/primevue/issues/3889)
+- New passthrough\(pt\) property implementation for Overlay Components  [\#3885](https://github.com/primefaces/primevue/issues/3885)
+- New passthrough\(pt\) property implementation for Misc Components  [\#3879](https://github.com/primefaces/primevue/issues/3879)
+
+**Fixed bugs:**
+
+- Message: wrong close icon size [\#3908](https://github.com/primefaces/primevue/issues/3908)
+- Panel: Header accessibility issue [\#3904](https://github.com/primefaces/primevue/issues/3904)
+- Calendar: Material theme icons not visible [\#3903](https://github.com/primefaces/primevue/issues/3903)
+- Password: Incorrect onClick property as scope for custom icons [\#3900](https://github.com/primefaces/primevue/issues/3900)
+- AutoComplete: class style and click event refactor on `removetokenicon` scoped slot [\#3899](https://github.com/primefaces/primevue/issues/3899)
+- Dropdown: Selection is not working correctly with falsy values [\#3891](https://github.com/primefaces/primevue/issues/3891)
+
+## [3.27.0](https://github.com/primefaces/primevue/tree/3.27.0) (2023-04-19)
+
+[Full Changelog](https://github.com/primefaces/primevue/compare/3.26.1...3.27.0)
+
+**Implemented New Features and Enhancements:**
+
+- Add icon templating support to components [\#3833](https://github.com/primefaces/primevue/issues/3833)
+- Improve icon implementation in core [\#3832](https://github.com/primefaces/primevue/issues/3832)
+- Add new Icon components [\#3829](https://github.com/primefaces/primevue/issues/3829)
+- Panel: Footer Templating [\#3820](https://github.com/primefaces/primevue/issues/3820)
+- AutoComplete: NumpadEnter is not recognised [\#3816](https://github.com/primefaces/primevue/issues/3816)
+- Calendar: Emit year-change event via navBackward and navForward [\#3811](https://github.com/primefaces/primevue/issues/3811)
+- New passthrough\(pt\) property implementation for Panel Components [\#3797](https://github.com/primefaces/primevue/issues/3797)
+- Galleria: Play and Pause [\#3619](https://github.com/primefaces/primevue/issues/3619)
+
+**Fixed bugs:**
+
+- TabView: Scrollable Starting/Ending Nav Arrow Blocks First/Last Tab [\#3849](https://github.com/primefaces/primevue/issues/3849)
+- DataTable Filter with Calendar is not showing in proper location [\#3632](https://github.com/primefaces/primevue/issues/3632)
+
+**Deprecated:**
+
+- Deprecated `indicator` slot [\#3871](https://github.com/primefaces/primevue/issues/3871)
+- FullCalendar: Deprecated component [\#3827](https://github.com/primefaces/primevue/issues/3827)
+
 ## [3.26.1](https://github.com/primefaces/primevue/tree/3.26.1) (2023-03-27)
 
 [Full Changelog](https://github.com/primefaces/primevue/compare/3.26.0...3.26.1)

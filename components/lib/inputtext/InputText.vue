@@ -1,14 +1,14 @@
 <template>
-    <input :class="['p-inputtext p-component', { 'p-filled': filled }]" :value="modelValue" @input="onInput" />
+    <input :class="cx('root')" :value="modelValue" @input="onInput" v-bind="ptm('root')" data-pc-name="inputtext" />
 </template>
 
 <script>
+import BaseInputText from './BaseInputText.vue';
+
 export default {
     name: 'InputText',
+    extends: BaseInputText,
     emits: ['update:modelValue'],
-    props: {
-        modelValue: null
-    },
     methods: {
         onInput(event) {
             this.$emit('update:modelValue', event.target.value);

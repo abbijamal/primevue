@@ -1,145 +1,72 @@
 <template>
-    <div v-if="isAdvanced" class="p-fileupload p-fileupload-advanced p-component">
-        <input ref="fileInput" type="file" @change="onFileSelect" :multiple="multiple" :accept="accept" :disabled="chooseDisabled" />
-        <div class="p-fileupload-buttonbar">
+    <div v-if="isAdvanced" :class="cx('root')" v-bind="ptm('root')" data-pc-name="fileupload">
+        <input ref="fileInput" type="file" @change="onFileSelect" :multiple="multiple" :accept="accept" :disabled="chooseDisabled" v-bind="ptm('input')" />
+        <div :class="cx('buttonbar')" v-bind="ptm('buttonbar')">
             <slot name="header" :files="files" :uploadedFiles="uploadedFiles" :chooseCallback="choose" :uploadCallback="upload" :clearCallback="clear">
-                <span v-ripple :class="advancedChooseButtonClass" :style="style" @click="choose" @keydown.enter="choose" @focus="onFocus" @blur="onBlur" tabindex="0">
-                    <span :class="advancedChooseIconClass"></span>
-                    <span class="p-button-label">{{ chooseButtonLabel }}</span>
+                <span v-ripple :class="chooseButtonClass" :style="style" @click="choose" @keydown.enter="choose" @focus="onFocus" @blur="onBlur" tabindex="0" v-bind="ptm('chooseButton')">
+                    <slot name="chooseicon" :class="cx('chooseIcon')">
+                        <component :is="chooseIcon ? 'span' : 'PlusIcon'" :class="[cx('chooseIcon'), chooseIcon]" aria-hidden="true" v-bind="ptm('chooseIcon')" />
+                    </slot>
+                    <span :class="cx('chooseButtonLabel')" v-bind="ptm('chooseButtonLabel')">{{ chooseButtonLabel }}</span>
                 </span>
-                <FileUploadButton v-if="showUploadButton" :label="uploadButtonLabel" :icon="uploadIcon" @click="upload" :disabled="uploadDisabled" />
-                <FileUploadButton v-if="showCancelButton" :label="cancelButtonLabel" :icon="cancelIcon" @click="clear" :disabled="cancelDisabled" />
+                <FileUploadButton v-if="showUploadButton" :label="uploadButtonLabel" @click="upload" :disabled="uploadDisabled" :pt="ptm('uploadButton')">
+                    <template #icon="iconProps">
+                        <slot name="uploadicon">
+                            <component :is="uploadIcon ? 'span' : 'UploadIcon'" :class="[iconProps.class, uploadIcon]" aria-hidden="true" v-bind="ptm('uploadButton')['icon']" />
+                        </slot>
+                    </template>
+                </FileUploadButton>
+                <FileUploadButton v-if="showCancelButton" :label="cancelButtonLabel" @click="clear" :disabled="cancelDisabled" :pt="ptm('cancelButton')">
+                    <template #icon="iconProps">
+                        <slot name="cancelicon">
+                            <component :is="cancelIcon ? 'span' : 'TimesIcon'" :class="[iconProps.class, cancelIcon]" aria-hidden="true" v-bind="ptm('cancelButton')['icon']" />
+                        </slot>
+                    </template>
+                </FileUploadButton>
             </slot>
         </div>
-        <div ref="content" class="p-fileupload-content" @dragenter="onDragEnter" @dragover="onDragOver" @dragleave="onDragLeave" @drop="onDrop">
+        <div ref="content" :class="cx('content')" @dragenter="onDragEnter" @dragover="onDragOver" @dragleave="onDragLeave" @drop="onDrop" v-bind="ptm('content')" :data-p-highlight="false">
             <slot name="content" :files="files" :uploadedFiles="uploadedFiles" :removeUploadedFileCallback="removeUploadedFile" :removeFileCallback="remove" :progress="progress" :messages="messages">
-                <FileUploadProgressBar v-if="hasFiles" :value="progress" :showValue="false" />
-                <FileUploadMessage v-for="msg of messages" :key="msg" severity="error" @close="onMessageClose">{{ msg }}</FileUploadMessage>
-                <FileContent v-if="hasFiles" :files="files" @remove="remove" :badgeValue="pendingLabel" :previewWidth="previewWidth" />
-                <FileContent :files="uploadedFiles" @remove="removeUploadedFile" :badgeValue="completedLabel" badgeSeverity="success" :previewWidth="previewWidth" />
+                <FileUploadProgressBar v-if="hasFiles" :value="progress" :showValue="false" :pt="ptm('progressbar')" />
+                <FileUploadMessage v-for="msg of messages" :key="msg" severity="error" @close="onMessageClose" :pt="ptm('message')">{{ msg }}</FileUploadMessage>
+                <FileContent v-if="hasFiles" :files="files" @remove="remove" :badgeValue="pendingLabel" :previewWidth="previewWidth" :templates="$slots" :pt="pt" />
+                <FileContent :files="uploadedFiles" @remove="removeUploadedFile" :badgeValue="completedLabel" badgeSeverity="success" :previewWidth="previewWidth" :templates="$slots" :pt="pt" />
             </slot>
-            <div v-if="$slots.empty && !hasFiles && !hasUploadedFiles" class="p-fileupload-empty">
+            <div v-if="$slots.empty && !hasFiles && !hasUploadedFiles" :class="cx('empty')" v-bind="ptm('empty')">
                 <slot name="empty"></slot>
             </div>
         </div>
     </div>
-    <div v-else-if="isBasic" class="p-fileupload p-fileupload-basic p-component">
-        <FileUploadMessage v-for="msg of messages" :key="msg" severity="error" @close="onMessageClose">{{ msg }}</FileUploadMessage>
-        <span v-ripple :class="basicChooseButtonClass" :style="style" @mouseup="onBasicUploaderClick" @keydown.enter="choose" @focus="onFocus" @blur="onBlur" tabindex="0">
-            <span :class="basicChooseButtonIconClass"></span>
-            <span class="p-button-label">{{ basicChooseButtonLabel }}</span>
-            <input v-if="!hasFiles" ref="fileInput" type="file" :accept="accept" :disabled="disabled" :multiple="multiple" @change="onFileSelect" @focus="onFocus" @blur="onBlur" />
+    <div v-else-if="isBasic" :class="cx('root')" v-bind="ptm('root')" data-pc-name="fileupload">
+        <FileUploadMessage v-for="msg of messages" :key="msg" severity="error" @close="onMessageClose" :pt="ptm('messages')">{{ msg }}</FileUploadMessage>
+        <span v-ripple :class="chooseButtonClass" :style="style" @mouseup="onBasicUploaderClick" @keydown.enter="choose" @focus="onFocus" @blur="onBlur" tabindex="0" v-bind="ptm('chooseButton')">
+            <slot v-if="!hasFiles || auto" name="uploadicon" :class="cx('uploadIcon')">
+                <component :is="uploadIcon ? 'span' : 'UploadIcon'" :class="[cx('uploadIcon'), uploadIcon]" aria-hidden="true" v-bind="ptm('uploadIcon')" />
+            </slot>
+            <slot v-else name="chooseicon" :class="cx('chooseIcon')">
+                <component :is="chooseIcon ? 'span' : 'PlusIcon'" :class="[cx('chooseIcon'), chooseIcon]" aria-hidden="true" v-bind="ptm('chooseIcon')" />
+            </slot>
+            <span :class="cx('label')" v-bind="ptm('label')">{{ basicChooseButtonLabel }}</span>
+            <input v-if="!hasFiles" ref="fileInput" type="file" :accept="accept" :disabled="disabled" :multiple="multiple" @change="onFileSelect" @focus="onFocus" @blur="onBlur" v-bind="ptm('input')" />
         </span>
     </div>
 </template>
 
 <script>
 import Button from 'primevue/button';
+import PlusIcon from 'primevue/icons/plus';
+import TimesIcon from 'primevue/icons/times';
+import UploadIcon from 'primevue/icons/upload';
 import Message from 'primevue/message';
 import ProgressBar from 'primevue/progressbar';
 import Ripple from 'primevue/ripple';
-import { DomHandler } from 'primevue/utils';
+import BaseFileUpload from './BaseFileUpload.vue';
 import FileContent from './FileContent.vue';
 
 export default {
     name: 'FileUpload',
+    extends: BaseFileUpload,
     emits: ['select', 'uploader', 'before-upload', 'progress', 'upload', 'error', 'before-send', 'clear', 'remove', 'remove-uploaded-file'],
-    props: {
-        name: {
-            type: String,
-            default: null
-        },
-        url: {
-            type: String,
-            default: null
-        },
-        mode: {
-            type: String,
-            default: 'advanced'
-        },
-        multiple: {
-            type: Boolean,
-            default: false
-        },
-        accept: {
-            type: String,
-            default: null
-        },
-        disabled: {
-            type: Boolean,
-            default: false
-        },
-        auto: {
-            type: Boolean,
-            default: false
-        },
-        maxFileSize: {
-            type: Number,
-            default: null
-        },
-        invalidFileSizeMessage: {
-            type: String,
-            default: '{0}: Invalid file size, file size should be smaller than {1}.'
-        },
-        invalidFileTypeMessage: {
-            type: String,
-            default: '{0}: Invalid file type, allowed file types: {1}.'
-        },
-        fileLimit: {
-            type: Number,
-            default: null
-        },
-        invalidFileLimitMessage: {
-            type: String,
-            default: 'Maximum number of files exceeded, limit is {0} at most.'
-        },
-        withCredentials: {
-            type: Boolean,
-            default: false
-        },
-        previewWidth: {
-            type: Number,
-            default: 50
-        },
-        chooseLabel: {
-            type: String,
-            default: null
-        },
-        uploadLabel: {
-            type: String,
-            default: null
-        },
-        cancelLabel: {
-            type: String,
-            default: null
-        },
-        customUpload: {
-            type: Boolean,
-            default: false
-        },
-        showUploadButton: {
-            type: Boolean,
-            default: true
-        },
-        showCancelButton: {
-            type: Boolean,
-            default: true
-        },
-        chooseIcon: {
-            type: String,
-            default: 'pi pi-plus'
-        },
-        uploadIcon: {
-            type: String,
-            default: 'pi pi-upload'
-        },
-        cancelIcon: {
-            type: String,
-            default: 'pi pi-times'
-        },
-        style: null,
-        class: null
-    },
     duplicateIEEvent: false,
     data() {
         return {
@@ -338,19 +265,19 @@ export default {
         },
         onDragOver(event) {
             if (!this.disabled) {
-                DomHandler.addClass(this.$refs.content, 'p-fileupload-highlight');
+                this.$refs.content.setAttribute('data-p-highlight', true);
                 event.stopPropagation();
                 event.preventDefault();
             }
         },
         onDragLeave() {
             if (!this.disabled) {
-                DomHandler.removeClass(this.$refs.content, 'p-fileupload-highlight');
+                this.$refs.content.setAttribute('data-p-highlight', false);
             }
         },
         onDrop(event) {
             if (!this.disabled) {
-                DomHandler.removeClass(this.$refs.content, 'p-fileupload-highlight');
+                this.$refs.content.setAttribute('data-p-highlight', false);
                 event.stopPropagation();
                 event.preventDefault();
 
@@ -429,32 +356,8 @@ export default {
         isBasic() {
             return this.mode === 'basic';
         },
-        advancedChooseButtonClass() {
-            return [
-                'p-button p-component p-fileupload-choose',
-                this.class,
-                {
-                    'p-disabled': this.disabled,
-                    'p-focus': this.focused
-                }
-            ];
-        },
-        basicChooseButtonClass() {
-            return [
-                'p-button p-component p-fileupload-choose',
-                this.class,
-                {
-                    'p-fileupload-choose-selected': this.hasFiles,
-                    'p-disabled': this.disabled,
-                    'p-focus': this.focused
-                }
-            ];
-        },
-        advancedChooseIconClass() {
-            return ['p-button-icon p-button-icon-left pi-fw', this.chooseIcon];
-        },
-        basicChooseButtonIconClass() {
-            return ['p-button-icon p-button-icon-left', !this.hasFiles || this.auto ? this.uploadIcon : this.chooseIcon];
+        chooseButtonClass() {
+            return [this.cx('chooseButton'), this.class];
         },
         basicChooseButtonLabel() {
             return this.auto ? this.chooseButtonLabel : this.hasFiles ? this.files.map((f) => f.name).join(', ') : this.chooseButtonLabel;
@@ -494,56 +397,13 @@ export default {
         FileUploadButton: Button,
         FileUploadProgressBar: ProgressBar,
         FileUploadMessage: Message,
-        FileContent
+        FileContent,
+        PlusIcon,
+        UploadIcon,
+        TimesIcon
     },
     directives: {
         ripple: Ripple
     }
 };
 </script>
-
-<style>
-.p-fileupload-content {
-    position: relative;
-}
-
-.p-fileupload-content .p-progressbar {
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.p-button.p-fileupload-choose {
-    position: relative;
-    overflow: hidden;
-}
-
-.p-fileupload-buttonbar {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.p-fileupload > input[type='file'],
-.p-fileupload-basic input[type='file'] {
-    display: none;
-}
-
-.p-fluid .p-fileupload .p-button {
-    width: auto;
-}
-
-.p-fileupload-file {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.p-fileupload-file-thumbnail {
-    flex-shrink: 0;
-}
-
-.p-fileupload-file-actions {
-    margin-left: auto;
-}
-</style>

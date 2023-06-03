@@ -29,17 +29,17 @@ export interface ToolbarPassThroughOptions {
      */
     root?: ToolbarPassThroughOptionType;
     /**
-     * Uses to pass attributes to the groupleft's DOM element.
+     * Uses to pass attributes to the start's DOM element.
      */
-    groupleft?: ToolbarPassThroughOptionType;
+    start?: ToolbarPassThroughOptionType;
     /**
-     * Uses to pass attributes to the groupcenter's DOM element.
+     * Uses to pass attributes to the center's DOM element.
      */
-    groupcenter?: ToolbarPassThroughOptionType;
+    center?: ToolbarPassThroughOptionType;
     /**
-     * Uses to pass attributes to the groupright's DOM element.
+     * Uses to pass attributes to the right's DOM element.
      */
-    groupright?: ToolbarPassThroughOptionType;
+    end?: ToolbarPassThroughOptionType;
 }
 
 /**
@@ -62,6 +62,11 @@ export interface ToolbarProps {
      * @type {ToolbarPassThroughOptions}
      */
     pt?: ToolbarPassThroughOptions;
+    /**
+     * When enabled, it removes component related styles in the core.
+     * @defaultValue false
+     */
+    unstyled?: boolean;
 }
 
 /**

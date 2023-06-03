@@ -19,6 +19,7 @@ export declare type AccordionTabPassThroughOptionType = AccordionTabPassThroughA
 export interface AccordionTabPassThroughMethodOptions {
     props: AccordionTabProps;
     parent: AccordionPassThroughOptions;
+    context: AccordionTabContext;
 }
 
 /**
@@ -37,19 +38,19 @@ export interface AccordionTabPassThroughOptions {
     /**
      * Uses to pass attributes to the headeraction's DOM element.
      */
-    headeraction?: AccordionTabPassThroughOptionType;
+    headerAction?: AccordionTabPassThroughOptionType;
     /**
      * Uses to pass attributes to the headericon's DOM element.
      */
-    headericon?: AccordionTabPassThroughOptionType;
+    headerIcon?: AccordionTabPassThroughOptionType;
     /**
      * Uses to pass attributes to the headertitle's DOM element.
      */
-    headertitle?: AccordionTabPassThroughOptionType;
+    headerTitle?: AccordionTabPassThroughOptionType;
     /**
      * Uses to pass attributes to the toggleablecontent's DOM element.
      */
-    toggleablecontent?: AccordionTabPassThroughOptionType;
+    toggleableContent?: AccordionTabPassThroughOptionType;
     /**
      * Uses to pass attributes to the content's DOM element.
      */
@@ -112,6 +113,32 @@ export interface AccordionTabProps {
      * @type {AccordionTabPassThroughOptions}
      */
     pt?: AccordionTabPassThroughOptions;
+}
+
+/**
+ * Defines current options in AccordionTab component.
+ */
+export interface AccordionTabContext {
+    /**
+     * Current index of the tab.
+     */
+    index: number;
+    /**
+     * Count of tabs
+     */
+    count: number;
+    /**
+     * Whether the tab is first.
+     */
+    first: boolean;
+    /**
+     * Whether the tab is last.
+     */
+    last: boolean;
+    /**
+     * Whether the tab is active.
+     */
+    active: boolean;
 }
 
 /**

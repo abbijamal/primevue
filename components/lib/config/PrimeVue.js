@@ -1,7 +1,7 @@
 import { FilterMatchMode } from 'primevue/api';
 import { inject, reactive } from 'vue';
 
-const defaultOptions = {
+export const defaultOptions = {
     ripple: false,
     inputStyle: 'outlined',
     locale: {
@@ -130,7 +130,9 @@ const defaultOptions = {
         overlay: 1000,
         menu: 1000,
         tooltip: 1100
-    }
+    },
+    pt: undefined,
+    unstyled: false
 };
 
 const PrimeVueSymbol = Symbol();

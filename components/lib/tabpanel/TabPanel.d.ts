@@ -19,6 +19,7 @@ export declare type TabPanelPassThroughOptionType = TabPanelPassThroughAttribute
 export interface TabPanelPassThroughMethodOptions {
     props: TabPanelProps;
     parent: TabViewPassThroughOptions;
+    context: TabPanelContext;
 }
 
 /**
@@ -37,11 +38,11 @@ export interface TabPanelPassThroughOptions {
     /**
      * Uses to pass attributes to the header action's DOM element.
      */
-    headeraction?: TabPanelPassThroughOptionType;
+    headerAction?: TabPanelPassThroughOptionType;
     /**
      * Uses to pass attributes to the title's DOM element.
      */
-    headertitle?: TabPanelPassThroughOptionType;
+    headerTitle?: TabPanelPassThroughOptionType;
     /**
      * Uses to pass attributes to the list's DOM element.
      */
@@ -62,12 +63,10 @@ export interface TabPanelProps {
     header?: string | undefined;
     /**
      * Inline style of the tab header.
-     * @deprecated since v3.26.0. Use 'pt' property instead.
      */
     headerStyle?: any;
     /**
      * Style class of the tab header.
-     * @deprecated since v3.26.0. Use 'pt' property instead.
      */
     headerClass?: any;
     /**
@@ -82,12 +81,10 @@ export interface TabPanelProps {
     headerActionProps?: AnchorHTMLAttributes | undefined;
     /**
      * Inline style of the tab content.
-     * @deprecated since v3.26.0. Use 'pt' property instead.
      */
     contentStyle?: any;
     /**
      * Style class of the tab content.
-     * @deprecated since v3.26.0. Use 'pt' property instead.
      */
     contentClass?: any;
     /**
@@ -106,6 +103,17 @@ export interface TabPanelProps {
      */
     pt?: TabPanelPassThroughOptions;
 }
+
+/**
+ * Defines current options in TabPanel component.
+ */
+export interface TabPanelContext {
+    /**
+     * Current index of the tab.
+     */
+    index: number;
+}
+
 /**
  * Defines valid slots in TabPanel slots.
  */
@@ -113,11 +121,11 @@ export interface TabPanelSlots {
     /**
      * Custom content template.
      */
-    default: () => VNode[];
+    default(): VNode[];
     /**
      * Custom header template.
      */
-    header: () => VNode[];
+    header(): VNode[];
 }
 
 export interface TabPanelEmits {}

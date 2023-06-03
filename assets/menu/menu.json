@@ -455,9 +455,18 @@
             "to": "/uikit"
         },
         {
-            "name": "PrimeIcons",
+            "name": "Icons",
             "icon": "pi pi-eye",
-            "to": "/icons"
+            "children": [
+                {
+                    "name": "Prime Icons",
+                    "to": "/icons"
+                },
+                {
+                    "name": "Custom Icons",
+                    "to": "/customicons"
+                }
+            ]
         },
         {
             "name": "Templates",
@@ -472,7 +481,7 @@
         {
             "name": "PrimeFlex CSS",
             "icon": "pi pi-table",
-            "href": "https://www.primefaces.org/primeflex"
+            "href": "https://primeflex.org"
         },
         {
             "name": "Support",

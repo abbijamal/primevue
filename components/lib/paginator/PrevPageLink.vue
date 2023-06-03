@@ -1,29 +1,30 @@
 <template>
-    <button v-ripple :class="containerClass" type="button">
-        <component :is="template || 'AngleLeftIcon'" class="p-paginator-icon" />
+    <button v-ripple :class="cx('prevPageButton')" type="button" v-bind="getPTOptions('prevPageButton')">
+        <component :is="template || 'AngleLeftIcon'" :class="cx('prevPageIcon')" v-bind="getPTOptions('prevPageIcon')" />
     </button>
 </template>
 
 <script>
-import AngleLeftIcon from 'primevue/icon/angleleft';
+import BaseComponent from 'primevue/basecomponent';
+import AngleLeftIcon from 'primevue/icons/angleleft';
 import Ripple from 'primevue/ripple';
 
 export default {
     name: 'PrevPageLink',
+    extends: BaseComponent,
     props: {
         template: {
             type: Function,
             default: null
         }
     },
-    computed: {
-        containerClass() {
-            return [
-                'p-paginator-prev p-paginator-element p-link',
-                {
-                    'p-disabled': this.$attrs.disabled
+    methods: {
+        getPTOptions(key) {
+            return this.ptm(key, {
+                context: {
+                    disabled: this.$attrs.disabled
                 }
-            ];
+            });
         }
     },
     components: {

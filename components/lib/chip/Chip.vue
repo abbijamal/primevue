@@ -1,40 +1,25 @@
 <template>
-    <div v-if="visible" :class="containerClass" :aria-label="label">
+    <div v-if="visible" :class="cx('root')" :aria-label="label" v-bind="ptm('root')" data-pc-name="chip">
         <slot>
-            <img v-if="image" :src="image" />
-            <span v-else-if="icon" :class="iconClass"></span>
-            <div v-if="label" class="p-chip-text">{{ label }}</div>
+            <img v-if="image" :src="image" v-bind="ptm('image')" />
+            <component v-else-if="$slots.icon" :is="$slots.icon" :class="cx('icon')" v-bind="ptm('icon')" />
+            <span v-else-if="icon" :class="[cx('icon'), icon]" v-bind="ptm('icon')" />
+            <div v-if="label" :class="cx('label')" v-bind="ptm('label')">{{ label }}</div>
         </slot>
-        <span v-if="removable" tabindex="0" :class="removeIconClass" @click="close" @keydown="onKeydown"></span>
+        <slot v-if="removable" name="removeicon" :onClick="close" :onKeydown="onKeydown">
+            <component :is="removeIcon ? 'span' : 'TimesCircleIcon'" tabindex="0" :class="[cx('removeIcon'), removeIcon]" @click="close" @keydown="onKeydown" v-bind="ptm('removeIcon')"></component>
+        </slot>
     </div>
 </template>
 
 <script>
+import TimesCircleIcon from 'primevue/icons/timescircle';
+import BaseChip from './BaseChip.vue';
+
 export default {
     name: 'Chip',
+    extends: BaseChip,
     emits: ['remove'],
-    props: {
-        label: {
-            type: String,
-            default: null
-        },
-        icon: {
-            type: String,
-            default: null
-        },
-        image: {
-            type: String,
-            default: null
-        },
-        removable: {
-            type: Boolean,
-            default: false
-        },
-        removeIcon: {
-            type: String,
-            default: 'pi pi-times-circle'
-        }
-    },
     data() {
         return {
             visible: true
@@ -51,45 +36,8 @@ export default {
             this.$emit('remove', event);
         }
     },
-    computed: {
-        containerClass() {
-            return [
-                'p-chip p-component',
-                {
-                    'p-chip-image': this.image != null
-                }
-            ];
-        },
-        iconClass() {
-            return ['p-chip-icon', this.icon];
-        },
-        removeIconClass() {
-            return ['p-chip-remove-icon', this.removeIcon];
-        }
+    components: {
+        TimesCircleIcon
     }
 };
 </script>
-
-<style>
-.p-chip {
-    display: inline-flex;
-    align-items: center;
-}
-
-.p-chip-text {
-    line-height: 1.5;
-}
-
-.p-chip-icon.pi {
-    line-height: 1.5;
-}
-
-.p-chip-remove-icon {
-    line-height: 1.5;
-    cursor: pointer;
-}
-
-.p-chip img {
-    border-radius: 50%;
-}
-</style>

@@ -40,11 +40,11 @@ export interface ScrollPanelPassThroughOptions {
     /**
      * Uses to pass attributes to the horizontal panel's DOM element.
      */
-    barx?: ScrollPanelPassThroughOptionType;
+    barX?: ScrollPanelPassThroughOptionType;
     /**
      * Uses to pass attributes to the vertical panel's DOM element.
      */
-    bary?: ScrollPanelPassThroughOptionType;
+    barY?: ScrollPanelPassThroughOptionType;
 }
 
 /**
@@ -93,6 +93,11 @@ export interface ScrollPanelProps {
      * @type {ScrollPanelPassThroughOptions}
      */
     pt?: ScrollPanelPassThroughOptions;
+    /**
+     * When enabled, it removes component related styles in the core.
+     * @defaultValue false
+     */
+    unstyled?: boolean;
 }
 
 /**

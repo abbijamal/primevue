@@ -14,14 +14,31 @@
         @dragover="onDragOver"
         @dragleave="onDragLeave"
         @drop="onDrop"
+        v-bind="{ ...getColumnPT('root'), ...getColumnPT('headerCell') }"
+        :data-p-sortable-column="columnProp('sortable')"
+        :data-p-resizable-column="resizableColumns"
+        :data-p-highlight="isColumnSorted()"
+        :data-p-filter-column="filterColumn"
+        :data-p-frozen-column="columnProp('frozen')"
+        :data-p-reorderable-column="reorderableColumns"
     >
-        <span v-if="resizableColumns && !columnProp('frozen')" class="p-column-resizer" @mousedown="onResizeStart"></span>
-        <div class="p-column-header-content">
+        <span v-if="resizableColumns && !columnProp('frozen')" :class="cx('columnResizer')" @mousedown="onResizeStart" v-bind="getColumnPT('columnResizer')"></span>
+        <div :class="cx('headerContent')" v-bind="getColumnPT('headerContent')">
             <component v-if="column.children && column.children.header" :is="column.children.header" :column="column" />
-            <span v-if="columnProp('header')" class="p-column-title">{{ columnProp('header') }}</span>
-            <span v-if="columnProp('sortable')" :class="sortableColumnIcon"></span>
-            <span v-if="isMultiSorted()" class="p-sortable-column-badge">{{ getBadgeValue() }}</span>
-            <DTHeaderCheckbox v-if="columnProp('selectionMode') === 'multiple' && filterDisplay !== 'row'" :checked="allRowsSelected" @change="onHeaderCheckboxChange" :disabled="empty" />
+            <span v-if="columnProp('header')" :class="cx('headerTitle')" v-bind="getColumnPT('headerTitle')">{{ columnProp('header') }}</span>
+            <span v-if="columnProp('sortable')" v-bind="getColumnPT('sort')">
+                <component :is="(column.children && column.children.sorticon) || sortableColumnIcon" :sorted="sortState.sorted" :sortOrder="sortState.sortOrder" :class="cx('sortIcon')" />
+            </span>
+            <span v-if="isMultiSorted()" :class="cx('sortBadge')" v-bind="getColumnPT('sortBadge')">{{ getBadgeValue() }}</span>
+            <DTHeaderCheckbox
+                v-if="columnProp('selectionMode') === 'multiple' && filterDisplay !== 'row'"
+                :checked="allRowsSelected"
+                @change="onHeaderCheckboxChange"
+                :disabled="empty"
+                :headerCheckboxIconTemplate="headerCheckboxIconTemplate"
+                :column="column"
+                :pt="pt"
+            />
             <DTColumnFilter
                 v-if="filterDisplay === 'menu' && column.children && column.children.filter"
                 :field="columnProp('filterField') || columnProp('field')"
@@ -33,6 +50,10 @@
                 :filterFooterTemplate="column.children && column.children.filterfooter"
                 :filterClearTemplate="column.children && column.children.filterclear"
                 :filterApplyTemplate="column.children && column.children.filterapply"
+                :filterIconTemplate="column.children && column.children.filtericon"
+                :filterAddIconTemplate="column.children && column.children.filteraddicon"
+                :filterRemoveIconTemplate="column.children && column.children.filterremoveicon"
+                :filterClearIconTemplate="column.children && column.children.filterclearicon"
                 :filters="filters"
                 :filtersStore="filtersStore"
                 :filterInputProps="filterInputProps"
@@ -52,18 +73,25 @@
                 @constraint-add="$emit('constraint-add', $event)"
                 @constraint-remove="$emit('constraint-remove', $event)"
                 @apply-click="$emit('apply-click', $event)"
+                :pt="pt"
+                :column="column"
             />
         </div>
     </th>
 </template>
 
 <script>
+import BaseComponent from 'primevue/basecomponent';
+import SortAltIcon from 'primevue/icons/sortalt';
+import SortAmountDownIcon from 'primevue/icons/sortamountdown';
+import SortAmountUpAltIcon from 'primevue/icons/sortamountupalt';
 import { DomHandler, ObjectUtils } from 'primevue/utils';
 import ColumnFilter from './ColumnFilter.vue';
 import HeaderCheckbox from './HeaderCheckbox.vue';
 
 export default {
     name: 'HeaderCell',
+    extends: BaseComponent,
     emits: [
         'column-click',
         'column-mousedown',
@@ -85,6 +113,10 @@ export default {
     props: {
         column: {
             type: Object,
+            default: null
+        },
+        index: {
+            type: Number,
             default: null
         },
         resizableColumns: {
@@ -146,6 +178,10 @@ export default {
         filterInputProps: {
             type: null,
             default: null
+        },
+        headerCheckboxIconTemplate: {
+            type: Function,
+            default: null
         }
     },
     data() {
@@ -167,11 +203,28 @@ export default {
         columnProp(prop) {
             return ObjectUtils.getVNodeProp(this.column, prop);
         },
+        getColumnPT(key) {
+            const columnMetaData = {
+                props: this.column.props,
+                parent: {
+                    props: this.$props,
+                    state: this.$data
+                },
+                context: {
+                    index: this.index
+                }
+            };
+
+            return { ...this.ptm(`column.${key}`, { column: columnMetaData }), ...this.ptmo(this.getColumnProp(), key, columnMetaData) };
+        },
+        getColumnProp() {
+            return this.column.props && this.column.props.pt ? this.column.props.pt : undefined; //@todo:
+        },
         onClick(event) {
             this.$emit('column-click', { originalEvent: event, column: this.column });
         },
         onKeyDown(event) {
-            if ((event.code === 'Enter' || event.code === 'Space') && event.currentTarget.nodeName === 'TH' && DomHandler.hasClass(event.currentTarget, 'p-sortable-column')) {
+            if ((event.code === 'Enter' || event.code === 'Space') && event.currentTarget.nodeName === 'TH' && DomHandler.getAttribute(event.currentTarget, 'data-p-sortable-column')) {
                 this.$emit('column-click', { originalEvent: event, column: this.column });
                 event.preventDefault();
             }
@@ -248,18 +301,7 @@ export default {
     },
     computed: {
         containerClass() {
-            return [
-                this.filterColumn ? this.columnProp('filterHeaderClass') : this.columnProp('headerClass'),
-                this.columnProp('class'),
-                {
-                    'p-sortable-column': this.columnProp('sortable'),
-                    'p-resizable-column': this.resizableColumns,
-                    'p-highlight': this.isColumnSorted(),
-                    'p-filter-column': this.filterColumn,
-                    'p-frozen-column': this.columnProp('frozen'),
-                    'p-reorderable-column': this.reorderableColumns
-                }
-            ];
+            return [this.cx('headerCell'), this.filterColumn ? this.columnProp('filterHeaderClass') : this.columnProp('headerClass'), this.columnProp('class')];
         },
         containerStyle() {
             let headerStyle = this.filterColumn ? this.columnProp('filterHeaderStyle') : this.columnProp('headerStyle');
@@ -267,7 +309,7 @@ export default {
 
             return this.columnProp('frozen') ? [columnStyle, headerStyle, this.styleObject] : [columnStyle, headerStyle];
         },
-        sortableColumnIcon() {
+        sortState() {
             let sorted = false;
             let sortOrder = null;
 
@@ -283,21 +325,26 @@ export default {
                 }
             }
 
-            return [
-                'p-sortable-column-icon pi pi-fw',
-                {
-                    'pi-sort-alt': !sorted,
-                    'pi-sort-amount-up-alt': sorted && sortOrder > 0,
-                    'pi-sort-amount-down': sorted && sortOrder < 0
-                }
-            ];
+            return {
+                sorted,
+                sortOrder
+            };
+        },
+        sortableColumnIcon() {
+            const { sorted, sortOrder } = this.sortState;
+
+            if (!sorted) return SortAltIcon;
+            else if (sorted && sortOrder > 0) return SortAmountUpAltIcon;
+            else if (sorted && sortOrder < 0) return SortAmountDownIcon;
+
+            return null;
         },
         ariaSort() {
             if (this.columnProp('sortable')) {
-                const sortIcon = this.sortableColumnIcon;
+                const { sorted, sortOrder } = this.sortState;
 
-                if (sortIcon[1]['pi-sort-amount-down']) return 'descending';
-                else if (sortIcon[1]['pi-sort-amount-up-alt']) return 'ascending';
+                if (sorted && sortOrder < 0) return 'descending';
+                else if (sorted && sortOrder > 0) return 'ascending';
                 else return 'none';
             } else {
                 return null;
@@ -306,7 +353,10 @@ export default {
     },
     components: {
         DTHeaderCheckbox: HeaderCheckbox,
-        DTColumnFilter: ColumnFilter
+        DTColumnFilter: ColumnFilter,
+        SortAltIcon: SortAltIcon,
+        SortAmountUpAltIcon: SortAmountUpAltIcon,
+        SortAmountDownIcon: SortAmountDownIcon
     }
 };
 </script>

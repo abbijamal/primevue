@@ -1,14 +1,14 @@
 <template>
     <Portal :appendTo="appendTo" :disabled="!popup">
         <transition name="p-connected-overlay" @enter="onEnter" @leave="onLeave" @after-leave="onAfterLeave">
-            <div v-if="popup ? overlayVisible : true" :ref="containerRef" :id="id" :class="containerClass" v-bind="$attrs" @click="onOverlayClick">
-                <div v-if="$slots.start" class="p-menu-start">
+            <div v-if="popup ? overlayVisible : true" :ref="containerRef" :id="id" :class="cx('root')" @click="onOverlayClick" v-bind="{ ...$attrs, ...ptm('root') }" data-pc-name="menu">
+                <div v-if="$slots.start" :class="cx('start')" v-bind="ptm('start')">
                     <slot name="start"></slot>
                 </div>
                 <ul
                     :ref="listRef"
                     :id="id + '_list'"
-                    class="p-menu-list p-reset"
+                    :class="cx('menu')"
                     role="menu"
                     :tabindex="tabindex"
                     :aria-activedescendant="focused ? focusedOptionId : undefined"
@@ -17,22 +17,23 @@
                     @focus="onListFocus"
                     @blur="onListBlur"
                     @keydown="onListKeyDown"
+                    v-bind="ptm('menu')"
                 >
                     <template v-for="(item, i) of model" :key="label(item) + i.toString()">
                         <template v-if="item.items && visible(item) && !item.separator">
-                            <li v-if="item.items" :id="id + '_' + i" class="p-submenu-header" role="none">
+                            <li v-if="item.items" :id="id + '_' + i" :class="cx('submenuHeader')" role="none" v-bind="ptm('submenuHeader')">
                                 <slot name="item" :item="item">{{ label(item) }}</slot>
                             </li>
                             <template v-for="(child, j) of item.items" :key="child.label + i + '_' + j">
-                                <PVMenuitem v-if="visible(child) && !child.separator" :id="id + '_' + i + '_' + j" :item="child" :template="$slots.item" :exact="exact" :focusedOptionId="focusedOptionId" @item-click="itemClick" />
-                                <li v-else-if="visible(child) && child.separator" :key="'separator' + i + j" :class="separatorClass(item)" :style="child.style" role="separator"></li>
+                                <PVMenuitem v-if="visible(child) && !child.separator" :id="id + '_' + i + '_' + j" :item="child" :templates="$slots" :exact="exact" :focusedOptionId="focusedOptionId" @item-click="itemClick" :pt="pt" />
+                                <li v-else-if="visible(child) && child.separator" :key="'separator' + i + j" :class="[cx('separator'), item.class]" :style="child.style" role="separator" v-bind="ptm('separator')"></li>
                             </template>
                         </template>
-                        <li v-else-if="visible(item) && item.separator" :key="'separator' + i.toString()" :class="separatorClass(item)" :style="item.style" role="separator"></li>
-                        <PVMenuitem v-else :key="label(item) + i.toString()" :id="id + '_' + i" :item="item" :template="$slots.item" :exact="exact" :focusedOptionId="focusedOptionId" @item-click="itemClick" />
+                        <li v-else-if="visible(item) && item.separator" :key="'separator' + i.toString()" :class="[cx('separator'), item.class]" :style="item.style" role="separator" v-bind="ptm('separator')"></li>
+                        <PVMenuitem v-else :key="label(item) + i.toString()" :id="id + '_' + i" :item="item" :templates="$slots" :exact="exact" :focusedOptionId="focusedOptionId" @item-click="itemClick" :pt="pt" />
                     </template>
                 </ul>
-                <div v-if="$slots.end" class="p-menu-end">
+                <div v-if="$slots.end" :class="cx('end')" v-bind="ptm('end')">
                     <slot name="end"></slot>
                 </div>
             </div>
@@ -44,50 +45,14 @@
 import OverlayEventBus from 'primevue/overlayeventbus';
 import Portal from 'primevue/portal';
 import { ConnectedOverlayScrollHandler, DomHandler, UniqueComponentId, ZIndexUtils } from 'primevue/utils';
+import BaseMenu from './BaseMenu.vue';
 import Menuitem from './Menuitem.vue';
 
 export default {
     name: 'Menu',
+    extends: BaseMenu,
     inheritAttrs: false,
     emits: ['show', 'hide', 'focus', 'blur'],
-    props: {
-        popup: {
-            type: Boolean,
-            default: false
-        },
-        model: {
-            type: Array,
-            default: null
-        },
-        appendTo: {
-            type: String,
-            default: 'body'
-        },
-        autoZIndex: {
-            type: Boolean,
-            default: true
-        },
-        baseZIndex: {
-            type: Number,
-            default: 0
-        },
-        exact: {
-            type: Boolean,
-            default: true
-        },
-        tabindex: {
-            type: Number,
-            default: 0
-        },
-        'aria-label': {
-            type: String,
-            default: null
-        },
-        'aria-labelledby': {
-            type: String,
-            default: null
-        }
-    },
     data() {
         return {
             id: this.$attrs.id,
@@ -235,12 +200,12 @@ export default {
             event.preventDefault();
         },
         onEndKey(event) {
-            this.changeFocusedOptionIndex(DomHandler.find(this.container, 'li.p-menuitem:not(.p-disabled)').length - 1);
+            this.changeFocusedOptionIndex(DomHandler.find(this.container, 'li[data-pc-section="menuitem"][data-p-disabled="false"]').length - 1);
             event.preventDefault();
         },
         onEnterKey(event) {
             const element = DomHandler.findSingle(this.list, `li[id="${`${this.focusedOptionIndex}`}"]`);
-            const anchorElement = element && DomHandler.findSingle(element, '.p-menuitem-link');
+            const anchorElement = element && DomHandler.findSingle(element, 'a[data-pc-section="action"]');
 
             this.popup && DomHandler.focus(this.target);
             anchorElement ? anchorElement.click() : element && element.click();
@@ -251,19 +216,19 @@ export default {
             this.onEnterKey(event);
         },
         findNextOptionIndex(index) {
-            const links = DomHandler.find(this.container, 'li.p-menuitem:not(.p-disabled)');
+            const links = DomHandler.find(this.container, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
             const matchedOptionIndex = [...links].findIndex((link) => link.id === index);
 
             return matchedOptionIndex > -1 ? matchedOptionIndex + 1 : 0;
         },
         findPrevOptionIndex(index) {
-            const links = DomHandler.find(this.container, 'li.p-menuitem:not(.p-disabled)');
+            const links = DomHandler.find(this.container, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
             const matchedOptionIndex = [...links].findIndex((link) => link.id === index);
 
             return matchedOptionIndex > -1 ? matchedOptionIndex - 1 : 0;
         },
         changeFocusedOptionIndex(index) {
-            const links = DomHandler.find(this.container, 'li.p-menuitem:not(.p-disabled)');
+            const links = DomHandler.find(this.container, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
             let order = index >= links.length ? links.length - 1 : index < 0 ? 0 : index;
 
             order > -1 && (this.focusedOptionIndex = links[order].getAttribute('id'));
@@ -281,6 +246,7 @@ export default {
             this.target = null;
         },
         onEnter(el) {
+            DomHandler.addStyles(el, { position: 'absolute', top: '0', left: '0' });
             this.alignOverlay();
             this.bindOutsideClickListener();
             this.bindResizeListener();
@@ -376,9 +342,6 @@ export default {
         label(item) {
             return typeof item.label === 'function' ? item.label() : item.label;
         },
-        separatorClass(item) {
-            return ['p-menuitem-separator', item.class];
-        },
         onOverlayClick(event) {
             OverlayEventBus.emit('overlay-click', {
                 originalEvent: event,
@@ -393,16 +356,6 @@ export default {
         }
     },
     computed: {
-        containerClass() {
-            return [
-                'p-menu p-component',
-                {
-                    'p-menu-overlay': this.popup,
-                    'p-input-filled': this.$primevue.config.inputStyle === 'filled',
-                    'p-ripple-disabled': this.$primevue.config.ripple === false
-                }
-            ];
-        },
         focusedOptionId() {
             return this.focusedOptionIndex !== -1 ? this.focusedOptionIndex : null;
         }
@@ -413,30 +366,3 @@ export default {
     }
 };
 </script>
-
-<style>
-.p-menu-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.p-menu ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.p-menu .p-menuitem-link {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    overflow: hidden;
-    position: relative;
-}
-
-.p-menu .p-menuitem-text {
-    line-height: 1;
-}
-</style>

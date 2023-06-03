@@ -8,6 +8,7 @@
  *
  */
 import { ButtonHTMLAttributes, VNode } from 'vue';
+import { TabPanelPassThroughOptionType } from '../tabpanel';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
 export declare type TabViewPassThroughOptionType = TabViewPassThroughAttributes | ((options: { props: TabViewProps; state: TabViewState }) => TabViewPassThroughAttributes) | null | undefined;
@@ -46,11 +47,11 @@ export interface TabViewPassThroughOptions {
     /**
      * Uses to pass attributes to the nav container's DOM element.
      */
-    navcontainer?: TabViewPassThroughOptionType;
+    navContainer?: TabViewPassThroughOptionType;
     /**
      * Uses to pass attributes to the nav content's DOM element.
      */
-    navcontent?: TabViewPassThroughOptionType;
+    navContent?: TabViewPassThroughOptionType;
     /**
      * Uses to pass attributes to the list's DOM element.
      */
@@ -62,23 +63,27 @@ export interface TabViewPassThroughOptions {
     /**
      * Uses to pass attributes to the previous button's DOM element.
      */
-    prevbutton?: TabViewPassThroughOptionType;
+    previousButton?: TabViewPassThroughOptionType;
     /**
      * Uses to pass attributes to the previous button icon's DOM element.
      */
-    previcon?: TabViewPassThroughOptionType;
+    previousIcon?: TabViewPassThroughOptionType;
     /**
-     * Uses to pass attributes to the nex button's DOM element.
+     * Uses to pass attributes to the next button's DOM element.
      */
-    nextbutton?: TabViewPassThroughOptionType;
+    nextButton?: TabViewPassThroughOptionType;
     /**
      * Uses to pass attributes to the next button icon's DOM element.
      */
-    nexticon?: TabViewPassThroughOptionType;
+    nextIcon?: TabViewPassThroughOptionType;
     /**
      * Uses to pass attributes to the panel's DOM element.
      */
-    panelcontainer?: TabViewPassThroughOptionType;
+    panelContainer?: TabViewPassThroughOptionType;
+    /**
+     * Uses to pass attributes to TabPanel helper components.
+     */
+    tab?: TabPanelPassThroughOptionType;
 }
 
 /**
@@ -152,10 +157,25 @@ export interface TabViewProps {
      */
     nextButtonProps?: ButtonHTMLAttributes | undefined;
     /**
+     * Previous icon of the scrollable tabview.
+     * @deprecated since v3.27.0. Use 'previousicon' slot.
+     */
+    prevIcon?: string | undefined;
+    /**
+     * Next icon of the scrollable tabview.
+     * @deprecated since v3.27.0. Use 'next' slot.
+     */
+    nextIcon?: string | undefined;
+    /**
      * Uses to pass attributes to DOM elements inside the component.
      * @type {TabViewPassThroughOptions}
      */
     pt?: TabViewPassThroughOptions;
+    /**
+     * When enabled, it removes component related styles in the core.
+     * @defaultValue false
+     */
+    unstyled?: boolean;
 }
 
 /**
@@ -169,7 +189,7 @@ export interface TabViewSlots {
     /**
      * Previous button icon template for the scrollable component.
      */
-    previcon(): VNode[];
+    previousicon(): VNode[];
     /**
      * Next button icon template for the scrollable component.
      */
@@ -181,10 +201,10 @@ export interface TabViewSlots {
  */
 export interface TabViewEmits {
     /**
-     * Emitted when the value changes.
-     * @param {number} value - New value.
+     * Emitted when the activeIndex changes.
+     * @param {number} index - Current activeIndex.
      */
-    'update:modelValue'(value: number): void;
+    'update:activeIndex'(index: number): void;
     /**
      * Callback to invoke when an active tab is changed.
      * @param {TabViewChangeEvent} event - Custom tab change event.

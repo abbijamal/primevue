@@ -1,17 +1,17 @@
 <template>
-    <div :class="containerClass" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="p-toast-message-content" :class="message.contentStyleClass">
-            <template v-if="!template">
-                <span :class="iconClass"></span>
-                <div class="p-toast-message-text">
-                    <span class="p-toast-summary">{{ message.summary }}</span>
-                    <div class="p-toast-detail">{{ message.detail }}</div>
+    <div :class="cx('container')" role="alert" aria-live="assertive" aria-atomic="true" v-bind="ptm('container')">
+        <div :class="cx('content')" v-bind="ptm('content')">
+            <template v-if="!templates.message">
+                <component :is="templates.icon ? templates.icon : iconComponent.name ? iconComponent : 'span'" :class="cx('icon')" v-bind="ptm('icon')" />
+                <div :class="cx('text')" v-bind="ptm('text')">
+                    <span :class="cx('summary')" v-bind="ptm('summary')">{{ message.summary }}</span>
+                    <div :class="cx('detail')" v-bind="ptm('detail')">{{ message.detail }}</div>
                 </div>
             </template>
-            <component v-else :is="template" :message="message"></component>
-            <div v-if="message.closable !== false">
-                <button v-ripple class="p-toast-icon-close p-link" type="button" :aria-label="closeAriaLabel" @click="onCloseClick" autofocus v-bind="closeButtonProps">
-                    <span :class="['p-toast-icon-close-icon', closeIcon]" />
+            <component v-else :is="templates.message" :message="message"></component>
+            <div v-if="message.closable !== false" v-bind="ptm('buttonContainer')">
+                <button v-ripple :class="cx('button')" type="button" :aria-label="closeAriaLabel" @click="onCloseClick" autofocus v-bind="{ ...closeButtonProps, ...ptm('button') }">
+                    <component :is="templates.closeicon || 'TimesIcon'" :class="cx('buttonIcon')" v-bind="ptm('buttonIcon')" />
                 </button>
             </div>
         </div>
@@ -19,18 +19,26 @@
 </template>
 
 <script>
+import CheckIcon from 'primevue/icons/check';
+import ExclamationTriangleIcon from 'primevue/icons/exclamationtriangle';
+import InfoCircleIcon from 'primevue/icons/infocircle';
+import TimesIcon from 'primevue/icons/times';
+import TimesCircleIcon from 'primevue/icons/timescircle';
 import Ripple from 'primevue/ripple';
+import BaseComponent from 'primevue/basecomponent';
 
 export default {
     name: 'ToastMessage',
+    extends: BaseComponent,
     emits: ['close'],
+    closeTimeout: null,
     props: {
         message: {
             type: null,
             default: null
         },
-        template: {
-            type: null,
+        templates: {
+            type: Object,
             default: null
         },
         closeIcon: {
@@ -58,7 +66,6 @@ export default {
             default: null
         }
     },
-    closeTimeout: null,
     mounted() {
         if (this.message.life) {
             this.closeTimeout = setTimeout(() => {
@@ -85,32 +92,24 @@ export default {
         }
     },
     computed: {
-        containerClass() {
-            return [
-                'p-toast-message',
-                this.message.styleClass,
-                {
-                    'p-toast-message-info': this.message.severity === 'info',
-                    'p-toast-message-warn': this.message.severity === 'warn',
-                    'p-toast-message-error': this.message.severity === 'error',
-                    'p-toast-message-success': this.message.severity === 'success'
-                }
-            ];
-        },
-        iconClass() {
-            return [
-                'p-toast-message-icon',
-                {
-                    [this.infoIcon]: this.message.severity === 'info',
-                    [this.warnIcon]: this.message.severity === 'warn',
-                    [this.errorIcon]: this.message.severity === 'error',
-                    [this.successIcon]: this.message.severity === 'success'
-                }
-            ];
+        iconComponent() {
+            return {
+                info: !this.infoIcon && InfoCircleIcon,
+                success: !this.successIcon && CheckIcon,
+                warn: !this.warnIcon && ExclamationTriangleIcon,
+                error: !this.errorIcon && TimesCircleIcon
+            }[this.message.severity];
         },
         closeAriaLabel() {
             return this.$primevue.config.locale.aria ? this.$primevue.config.locale.aria.close : undefined;
         }
+    },
+    components: {
+        TimesIcon: TimesIcon,
+        InfoCircleIcon: InfoCircleIcon,
+        CheckIcon: CheckIcon,
+        ExclamationTriangleIcon: ExclamationTriangleIcon,
+        TimesCircleIcon: TimesCircleIcon
     },
     directives: {
         ripple: Ripple

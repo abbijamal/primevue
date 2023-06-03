@@ -1,22 +1,14 @@
 <template>
-    <div class="p-avatar-group p-component">
+    <div :class="cx('root')" v-bind="ptm('root')" data-pc-name="avatargroup">
         <slot></slot>
     </div>
 </template>
 
 <script>
+import BaseAvatarGroup from './BaseAvatarGroup.vue';
+
 export default {
-    name: 'AvatarGroup'
+    name: 'AvatarGroup',
+    extends: BaseAvatarGroup
 };
 </script>
-
-<style>
-.p-avatar-group .p-avatar + .p-avatar {
-    margin-left: -1rem;
-}
-
-.p-avatar-group {
-    display: flex;
-    align-items: center;
-}
-</style>

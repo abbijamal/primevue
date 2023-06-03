@@ -1,25 +1,26 @@
 <template>
-    <nav :id="id" :class="containerClass">
-        <ol ref="list" class="p-steps-list">
+    <nav :id="id" :class="cx('root')" v-bind="ptm('root')" data-pc-name="steps">
+        <ol ref="list" :class="cx('menu')" v-bind="ptm('menu')">
             <template v-for="(item, index) of model" :key="item.to">
-                <li v-if="visible(item)" :class="getItemClass(item)" :style="item.style">
+                <li v-if="visible(item)" :class="[cx('menuitem', { item }), item.class]" :style="item.style" v-bind="ptm('menuitem')" :data-p-highlight="isActive(item)" :data-p-disabled="isItemDisabled(item)">
                     <template v-if="!$slots.item">
                         <router-link v-if="!isItemDisabled(item)" v-slot="{ navigate, href, isActive, isExactActive }" :to="item.to" custom>
                             <a
                                 :href="href"
-                                :class="linkClass({ isActive, isExactActive })"
+                                :class="cx('action', { isActive, isExactActive })"
                                 :tabindex="-1"
                                 :aria-current="isExactActive ? 'step' : undefined"
                                 @click="onItemClick($event, item, navigate)"
                                 @keydown="onItemKeydown($event, item, navigate)"
+                                v-bind="ptm('action')"
                             >
-                                <span class="p-steps-number">{{ index + 1 }}</span>
-                                <span class="p-steps-title">{{ label(item) }}</span>
+                                <span :class="cx('step')" v-bind="ptm('step')">{{ index + 1 }}</span>
+                                <span :class="cx('label')" v-bind="ptm('label')">{{ label(item) }}</span>
                             </a>
                         </router-link>
-                        <span v-else :class="linkClass()" @keydown="onItemKeydown($event, item)">
-                            <span class="p-steps-number">{{ index + 1 }}</span>
-                            <span class="p-steps-title">{{ label(item) }}</span>
+                        <span v-else :class="cx('action')" @keydown="onItemKeydown($event, item)" v-bind="ptm('action')">
+                            <span :class="cx('step')" v-bind="ptm('step')">{{ index + 1 }}</span>
+                            <span :class="cx('label')" v-bind="ptm('label')">{{ label(item) }}</span>
                         </span>
                     </template>
                     <component v-else :is="$slots.item" :item="item"></component>
@@ -30,28 +31,12 @@
 </template>
 
 <script>
-import { DomHandler, UniqueComponentId } from 'primevue/utils';
+import { DomHandler } from 'primevue/utils';
+import BaseSteps from './BaseSteps.vue';
 
 export default {
     name: 'Steps',
-    props: {
-        id: {
-            type: String,
-            default: UniqueComponentId()
-        },
-        model: {
-            type: Array,
-            default: null
-        },
-        readonly: {
-            type: Boolean,
-            default: true
-        },
-        exact: {
-            type: Boolean,
-            default: true
-        }
-    },
+    extends: BaseSteps,
     mounted() {
         const firstItem = this.findFirstItem();
 
@@ -149,12 +134,12 @@ export default {
             return prevItem ? prevItem.children[0] : null;
         },
         findFirstItem() {
-            const firstSibling = DomHandler.findSingle(this.$refs.list, '.p-steps-item');
+            const firstSibling = DomHandler.findSingle(this.$refs.list, '[data-pc-section="menuitem"]');
 
             return firstSibling ? firstSibling.children[0] : null;
         },
         findLastItem() {
-            const siblings = DomHandler.find(this.$refs.list, '.p-steps-item');
+            const siblings = DomHandler.find(this.$refs.list, '[data-pc-section="menuitem"]');
 
             return siblings ? siblings[siblings.length - 1].children[0] : null;
         },
@@ -165,25 +150,6 @@ export default {
         },
         isActive(item) {
             return item.to ? this.$router.resolve(item.to).path === this.$route.path : false;
-        },
-        getItemClass(item) {
-            return [
-                'p-steps-item',
-                item.class,
-                {
-                    'p-highlight p-steps-current': this.isActive(item),
-                    'p-disabled': this.isItemDisabled(item)
-                }
-            ];
-        },
-        linkClass(routerProps) {
-            return [
-                'p-menuitem-link',
-                {
-                    'router-link-active': routerProps && routerProps.isActive,
-                    'router-link-active-exact': this.exact && routerProps && routerProps.isExactActive
-                }
-            ];
         },
         isItemDisabled(item) {
             return this.disabled(item) || (this.readonly && !this.isActive(item));
@@ -197,61 +163,6 @@ export default {
         label(item) {
             return typeof item.label === 'function' ? item.label() : item.label;
         }
-    },
-    computed: {
-        containerClass() {
-            return ['p-steps p-component', { 'p-readonly': this.readonly }];
-        }
     }
 };
 </script>
-
-<style>
-.p-steps {
-    position: relative;
-}
-
-.p-steps .p-steps-list {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-    display: flex;
-}
-
-.p-steps-item {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    flex: 1 1 auto;
-}
-
-.p-steps-item .p-menuitem-link {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: hidden;
-    text-decoration: none;
-}
-
-.p-steps.p-steps-readonly .p-steps-item {
-    cursor: auto;
-}
-
-.p-steps-item.p-steps-current .p-menuitem-link {
-    cursor: default;
-}
-
-.p-steps-title {
-    white-space: nowrap;
-}
-
-.p-steps-number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.p-steps-title {
-    display: block;
-}
-</style>

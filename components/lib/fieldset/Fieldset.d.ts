@@ -55,15 +55,15 @@ export interface FieldsetPassThroughOptions {
     /**
      * Uses to pass attributes to the toggler icon's DOM element.
      */
-    togglericon?: FieldsetPassThroughOptionType;
+    togglerIcon?: FieldsetPassThroughOptionType;
     /**
      * Uses to pass attributes to the legend title's DOM element.
      */
-    legendtitle?: FieldsetPassThroughOptionType;
+    legendTitle?: FieldsetPassThroughOptionType;
     /**
      * Uses to pass attributes to the toggleable content's DOM element.
      */
-    toggleablecontent?: FieldsetPassThroughOptionType;
+    toggleableContent?: FieldsetPassThroughOptionType;
     /**
      * Uses to pass attributes to the content's DOM element.
      */
@@ -116,6 +116,11 @@ export interface FieldsetProps {
      * @type {FieldsetPassThroughOptions}
      */
     pt?: FieldsetPassThroughOptions;
+    /**
+     * When enabled, it removes component related styles in the core.
+     * @defaultValue false
+     */
+    unstyled?: boolean;
 }
 
 /**
