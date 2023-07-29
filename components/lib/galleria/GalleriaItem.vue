@@ -18,7 +18,7 @@
             <li
                 v-for="(item, index) of value"
                 :key="`p-galleria-indicator-${index}`"
-                :class="cx('indicator', { context: { index: index } })"
+                :class="cx('indicator', { index })"
                 tabindex="0"
                 :aria-label="ariaPageLabel(index + 1)"
                 :aria-selected="activeIndex === index"
@@ -27,8 +27,9 @@
                 @mouseenter="onIndicatorMouseEnter(index)"
                 @keydown="onIndicatorKeyDown($event, index)"
                 v-bind="ptm('indicator')"
+                :data-p-highlight="isIndicatorItemActive(index)"
             >
-                <button v-if="!templates['indicator']" type="button" tabindex="-1" :class="cx('indicatorButton')"></button>
+                <button v-if="!templates['indicator']" type="button" tabindex="-1" :class="cx('indicatorButton')" v-bind="ptm('indicatorButton')"></button>
                 <component v-if="templates.indicator" :is="templates.indicator" :index="index" />
             </li>
         </ul>
@@ -43,6 +44,7 @@ import Ripple from 'primevue/ripple';
 
 export default {
     name: 'GalleriaItem',
+    hostName: 'Galleria',
     extends: BaseComponent,
     emits: ['start-slideshow', 'stop-slideshow', 'update:activeIndex'],
     props: {

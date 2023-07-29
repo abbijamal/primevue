@@ -8,14 +8,16 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type SidebarPassThroughOptionType = SidebarPassThroughAttributes | ((options: SidebarPassThroughMethodOptions) => SidebarPassThroughAttributes) | null | undefined;
+export declare type SidebarPassThroughOptionType = SidebarPassThroughAttributes | ((options: SidebarPassThroughMethodOptions) => SidebarPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface SidebarPassThroughMethodOptions {
+    instance: any;
     props: SidebarProps;
     state: SidebarState;
 }
@@ -53,6 +55,11 @@ export interface SidebarPassThroughOptions {
      * Uses to pass attributes to the mask's DOM element.
      */
     mask?: SidebarPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

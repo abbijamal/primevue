@@ -1,16 +1,27 @@
 <template>
     <Portal :appendTo="appendTo">
-        <div v-if="containerVisible" :ref="maskRef" :class="cx('mask')" @click="onMaskClick" v-bind="ptm('mask')">
+        <div v-if="containerVisible" :ref="maskRef" :class="cx('mask')" :style="sx('mask', true, { position, modal })" @click="onMaskClick" v-bind="ptm('mask')">
             <transition name="p-dialog" @before-enter="onBeforeEnter" @enter="onEnter" @before-leave="onBeforeLeave" @leave="onLeave" @after-leave="onAfterLeave" appear>
-                <div v-if="visible" :ref="containerRef" v-focustrap="{ disabled: !modal }" :class="cx('root')" role="dialog" :aria-labelledby="ariaLabelledById" :aria-modal="modal" v-bind="{ ...$attrs, ...ptm('root') }">
+                <div v-if="visible" :ref="containerRef" v-focustrap="{ disabled: !modal }" :class="cx('root')" :style="sx('root')" role="dialog" :aria-labelledby="ariaLabelledById" :aria-modal="modal" v-bind="{ ...$attrs, ...ptm('root') }">
                     <div v-if="showHeader" :ref="headerContainerRef" :class="cx('header')" @mousedown="initDrag" v-bind="ptm('header')">
                         <slot name="header">
                             <span v-if="header" :id="ariaLabelledById" :class="cx('headerTitle')" v-bind="ptm('headerTitle')">{{ header }}</span>
                         </slot>
                         <div :class="cx('headerIcons')" v-bind="ptm('headerIcons')">
-                            <button v-if="maximizable" :ref="maximizableRef" v-ripple :autofocus="focusableMax" :class="cx('maximizableButton')" @click="maximize" type="button" :tabindex="maximizable ? '0' : '-1'" v-bind="ptm('maximizableButton')">
+                            <button
+                                v-if="maximizable"
+                                :ref="maximizableRef"
+                                v-ripple
+                                :autofocus="focusableMax"
+                                :class="cx('maximizableButton')"
+                                @click="maximize"
+                                type="button"
+                                :tabindex="maximizable ? '0' : '-1'"
+                                v-bind="ptm('maximizableButton')"
+                                data-pc-group-section="headericon"
+                            >
                                 <slot name="maximizeicon" :maximized="maximized">
-                                    <component :is="maximizeIconComponent" :class="cx('maximizableIcon')" v-bind="ptm('maximizableIcon')" />
+                                    <component :is="maximizeIconComponent" :class="[cx('maximizableIcon'), maximized ? minimizeIcon : maximizeIcon]" v-bind="ptm('maximizableIcon')" />
                                 </slot>
                             </button>
                             <button
@@ -23,14 +34,15 @@
                                 :aria-label="closeAriaLabel"
                                 type="button"
                                 v-bind="{ ...closeButtonProps, ...ptm('closeButton') }"
+                                data-pc-group-section="headericon"
                             >
                                 <slot name="closeicon">
-                                    <component :is="closeIcon ? 'span' : 'TimesIcon'" :class="cx('closeButtonIcon')" v-bind="ptm('closeButtonIcon')"></component>
+                                    <component :is="closeIcon ? 'span' : 'TimesIcon'" :class="[cx('closeButtonIcon'), closeIcon]" v-bind="ptm('closeButtonIcon')"></component>
                                 </slot>
                             </button>
                         </div>
                     </div>
-                    <div :ref="contentRef" :class="cx('content')" :style="contentStyle" v-bind="{ ...contentProps, ...ptm('content') }">
+                    <div :ref="contentRef" :class="[cx('content'), contentClass]" :style="contentStyle" v-bind="{ ...contentProps, ...ptm('content') }">
                         <slot></slot>
                     </div>
                     <div v-if="footer || $slots.footer" :ref="footerContainerRef" :class="cx('footer')" v-bind="ptm('footer')">
@@ -43,7 +55,6 @@
 </template>
 
 <script>
-import BaseDialog from './BaseDialog.vue';
 import FocusTrap from 'primevue/focustrap';
 import TimesIcon from 'primevue/icons/times';
 import WindowMaximizeIcon from 'primevue/icons/windowmaximize';
@@ -52,6 +63,7 @@ import Portal from 'primevue/portal';
 import Ripple from 'primevue/ripple';
 import { DomHandler, UniqueComponentId, ZIndexUtils } from 'primevue/utils';
 import { computed } from 'vue';
+import BaseDialog from './BaseDialog.vue';
 
 export default {
     name: 'Dialog',
@@ -189,19 +201,19 @@ export default {
 
             if (!this.modal) {
                 if (this.maximized) {
-                    !this.isUnstyled && DomHandler.addClass(document.body, 'p-overflow-hidden');
+                    DomHandler.addClass(document.body, 'p-overflow-hidden');
                 } else {
-                    !this.isUnstyled && DomHandler.removeClass(document.body, 'p-overflow-hidden');
+                    DomHandler.removeClass(document.body, 'p-overflow-hidden');
                 }
             }
         },
         enableDocumentSettings() {
-            if (this.modal || (this.maximizable && this.maximized && !this.isUnstyled)) {
+            if (this.modal || (this.maximizable && this.maximized)) {
                 DomHandler.addClass(document.body, 'p-overflow-hidden');
             }
         },
         unbindDocumentState() {
-            if (this.modal || (this.maximizable && this.maximized && !this.isUnstyled)) {
+            if (this.modal || (this.maximizable && this.maximized)) {
                 DomHandler.removeClass(document.body, 'p-overflow-hidden');
             }
         },
@@ -221,12 +233,6 @@ export default {
                 window.document.removeEventListener('keydown', this.documentKeydownListener);
                 this.documentKeydownListener = null;
             }
-        },
-        getPositionClass() {
-            const positions = ['left', 'right', 'top', 'topleft', 'topright', 'bottom', 'bottomleft', 'bottomright'];
-            const pos = positions.find((item) => item === this.position);
-
-            return pos ? `p-dialog-${pos}` : '';
         },
         containerRef(el) {
             this.container = el;
@@ -250,7 +256,7 @@ export default {
             this.closeButton = el;
         },
         createStyle() {
-            if (!this.styleElement) {
+            if (!this.styleElement && !this.isUnstyled) {
                 this.styleElement = document.createElement('style');
                 this.styleElement.type = 'text/css';
                 document.head.appendChild(this.styleElement);

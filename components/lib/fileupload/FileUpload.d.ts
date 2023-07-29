@@ -8,16 +8,18 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ButtonPassThroughOptions } from '../button';
 import { MessagePassThroughOptions } from '../message';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type FileUploadPassThroughOptionType = FileUploadPassThroughAttributes | ((options: FileUploadPassThroughMethodOptions) => FileUploadPassThroughAttributes) | null | undefined;
+export declare type FileUploadPassThroughOptionType = FileUploadPassThroughAttributes | ((options: FileUploadPassThroughMethodOptions) => FileUploadPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface FileUploadPassThroughMethodOptions {
+    instance: any;
     props: FileUploadProps;
     state: FileUploadState;
 }
@@ -247,6 +249,11 @@ export interface FileUploadPassThroughOptions {
      * Uses to pass attributes to the upload icon's DOM element.
      */
     uploadIcon?: FileUploadPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

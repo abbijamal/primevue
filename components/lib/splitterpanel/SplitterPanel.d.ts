@@ -8,15 +8,18 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type SplitterPanelPassThroughOptionType = SplitterPanelPassThroughAttributes | ((options: SplitterPanelPassThroughMethodOptions) => SplitterPanelPassThroughAttributes) | null | undefined;
+export declare type SplitterPanelPassThroughOptionType = SplitterPanelPassThroughAttributes | ((options: SplitterPanelPassThroughMethodOptions) => SplitterPanelPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface SplitterPanelPassThroughMethodOptions {
+    instance: any;
     props: SplitterPanelProps;
+    context: SplitterPanelContext;
 }
 
 /**
@@ -28,6 +31,11 @@ export interface SplitterPanelPassThroughOptions {
      * Uses to pass attributes to the root's DOM element.
      */
     root?: SplitterPanelPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -35,6 +43,16 @@ export interface SplitterPanelPassThroughOptions {
  */
 export interface SplitterPanelPassThroughAttributes {
     [key: string]: any;
+}
+
+/**
+ * Defines options in SplitterPanel component.
+ */
+export interface SplitterPanelContext {
+    /**
+     * Current nested state of the panel.
+     */
+    nested?: boolean;
 }
 
 /**

@@ -13,11 +13,12 @@
                 :aria-label="ariaLabel"
                 :aria-labelledby="ariaLabelledby"
                 :pt="ptm('button')"
+                :unstyled="unstyled"
             >
                 <template #icon>
                     <slot name="icon" :visible="d_visible">
                         <component v-if="d_visible && !!hideIcon" :is="hideIcon ? 'span' : 'PlusIcon'" :class="cx('buttonIcon')" v-bind="ptm('button')['icon']" />
-                        <component v-else :is="showIcon ? 'span' : 'PlusIcon'" :class="cx('buttonIcon')" v-bind="ptm('button')['icon']" />
+                        <component v-else :is="showIcon ? 'span' : 'PlusIcon'" :class="d_visible && !!hideIcon ? hideIcon : showIcon" v-bind="ptm('button')['icon']" />
                     </slot>
                 </template>
             </SDButton>
@@ -110,7 +111,8 @@ export default {
         getPTOptions(id, key) {
             return this.ptm(key, {
                 context: {
-                    active: this.isItemActive(id)
+                    active: this.isItemActive(id),
+                    hidden: !this.d_visible
                 }
             });
         },

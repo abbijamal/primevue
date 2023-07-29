@@ -1,6 +1,6 @@
 <template>
-    <button v-ripple :class="cx('prevPageButton')" type="button" v-bind="getPTOptions('prevPageButton')">
-        <component :is="template || 'AngleLeftIcon'" :class="cx('prevPageIcon')" v-bind="getPTOptions('prevPageIcon')" />
+    <button v-ripple :class="cx('previousPageButton')" type="button" v-bind="getPTOptions('previousPageButton')">
+        <component :is="template || 'AngleLeftIcon'" :class="cx('previousPageIcon')" v-bind="getPTOptions('previousPageIcon')" />
     </button>
 </template>
 
@@ -11,6 +11,7 @@ import Ripple from 'primevue/ripple';
 
 export default {
     name: 'PrevPageLink',
+    hostName: 'Paginator',
     extends: BaseComponent,
     props: {
         template: {

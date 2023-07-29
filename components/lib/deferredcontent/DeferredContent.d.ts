@@ -8,14 +8,16 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type DeferredContentPassThroughOptionType = DeferredContentPassThroughAttributes | ((options: DeferredContentPassThroughMethodOptions) => DeferredContentPassThroughAttributes) | null | undefined;
+export declare type DeferredContentPassThroughOptionType = DeferredContentPassThroughAttributes | ((options: DeferredContentPassThroughMethodOptions) => DeferredContentPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface DeferredContentPassThroughMethodOptions {
+    instance: any;
     props: DeferredContentProps;
     state: DeferredContentState;
 }
@@ -29,6 +31,11 @@ export interface DeferredContentPassThroughOptions {
      * Uses to pass attributes to the root's DOM element.
      */
     root?: DeferredContentPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

@@ -6,6 +6,7 @@ const styles = `
 .p-dropdown {
     display: inline-flex;
     cursor: pointer;
+    position: relative;
     user-select: none;
 }
 
@@ -96,18 +97,14 @@ input.p-dropdown-label {
 }
 `;
 
-const inlineStyles = {
-    root: ({ props }) => ({ position: props.appendTo === 'self' ? 'relative' : undefined })
-};
-
 const classes = {
-    root: ({ props, state }) => [
+    root: ({ instance, props, state }) => [
         'p-dropdown p-component p-inputwrapper',
         {
             'p-disabled': props.disabled,
             'p-dropdown-clearable': props.showClear && !props.disabled,
             'p-focus': state.focused,
-            'p-inputwrapper-filled': props.hasSelectedOption,
+            'p-inputwrapper-filled': instance.hasSelectedOption,
             'p-inputwrapper-focus': state.focused || state.overlayVisible,
             'p-overlay-open': state.overlayVisible
         }
@@ -130,12 +127,10 @@ const classes = {
             'p-ripple-disabled': instance.$primevue.config.ripple === false
         }
     ],
-    hiddenFirstFocusableEl: 'p-hidden-accessible p-hidden-focusable',
     header: 'p-dropdown-header',
     filterContainer: 'p-dropdown-filter-container',
     filterInput: 'p-dropdown-filter p-inputtext p-component',
     filterIcon: 'p-dropdown-filter-icon',
-    hiddenFilterResult: 'p-hidden-accessible',
     wrapper: 'p-dropdown-items-wrapper',
     list: 'p-dropdown-items',
     itemGroup: 'p-dropdown-item-group',
@@ -147,13 +142,10 @@ const classes = {
             'p-disabled': instance.isOptionDisabled(option)
         }
     ],
-    emptyMessage: 'p-dropdown-empty-message',
-    hiddenEmptyMessage: 'p-hidden-accessible',
-    hiddenSelectedMessage: 'p-hidden-accessible',
-    hiddenLastFocusableEl: 'p-hidden-accessible p-hidden-focusable'
+    emptyMessage: 'p-dropdown-empty-message'
 };
 
-const { load: loadStyle } = useStyle(styles, { id: 'primevue_dropdown_style', manual: true });
+const { load: loadStyle } = useStyle(styles, { name: 'dropdown', manual: true });
 
 export default {
     name: 'BaseDropdown',
@@ -161,11 +153,11 @@ export default {
     props: {
         modelValue: null,
         options: Array,
-        optionLabel: null,
-        optionValue: null,
-        optionDisabled: null,
-        optionGroupLabel: null,
-        optionGroupChildren: null,
+        optionLabel: String || Function,
+        optionValue: String || Function,
+        optionDisabled: String || Function,
+        optionGroupLabel: String || Function,
+        optionGroupChildren: String || Function,
         scrollHeight: {
             type: String,
             default: '200px'
@@ -309,7 +301,6 @@ export default {
         }
     },
     css: {
-        inlineStyles,
         classes,
         loadStyle
     },

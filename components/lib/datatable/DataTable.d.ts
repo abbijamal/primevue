@@ -8,6 +8,7 @@
  *
  */
 import { InputHTMLAttributes, TableHTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ColumnPassThroughOptionType } from '../column';
 import { ColumnGroupPassThroughOptionType } from '../columngroup';
 import { PaginatorPassThroughOptionType } from '../paginator';
@@ -15,14 +16,16 @@ import { RowPassThroughOptionType } from '../row';
 import { ClassComponent, GlobalComponentConstructor, Nullable } from '../ts-helpers';
 import { VirtualScrollerPassThroughOptionType, VirtualScrollerProps } from '../virtualscroller';
 
-export declare type DataTablePassThroughOptionType = DataTablePassThroughAttributes | ((options: DataTablePassThroughMethodOptions) => DataTablePassThroughAttributes) | null | undefined;
+export declare type DataTablePassThroughOptionType = DataTablePassThroughAttributes | ((options: DataTablePassThroughMethodOptions) => DataTablePassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface DataTablePassThroughMethodOptions {
+    instance: any;
     props: DataTableProps;
     state: DataTableState;
+    context: DataTableContext;
 }
 
 /**
@@ -597,7 +600,7 @@ export interface DataTablePassThroughOptions {
     /**
      * Uses to pass attributes to the rowgroup header's DOM element.
      */
-    rowgroupHeader?: DataTablePassThroughOptionType;
+    rowGroupHeader?: DataTablePassThroughOptionType;
     /**
      * Uses to pass attributes to the body row's DOM element.
      */
@@ -609,7 +612,7 @@ export interface DataTablePassThroughOptions {
     /**
      * Uses to pass attributes to the rowgroup footer's DOM element.
      */
-    rowgroupFooter?: DataTablePassThroughOptionType;
+    rowGroupFooter?: DataTablePassThroughOptionType;
     /**
      * Uses to pass attributes to the empty message's DOM element.
      */
@@ -622,10 +625,6 @@ export interface DataTablePassThroughOptions {
      * Uses to pass attributes to the footerr ow's DOM element.
      */
     footerRow?: DataTablePassThroughOptionType;
-    /**
-     * Uses to pass attributes to the footer cell's DOM element.
-     */
-    footerCell?: DataTablePassThroughOptionType;
     /**
      * Uses to pass attributes to the resize helper's DOM element.
      */
@@ -650,6 +649,11 @@ export interface DataTablePassThroughOptions {
      * Uses to pass attributes to the Column helper components.
      */
     column?: ColumnPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -716,6 +720,31 @@ export interface DataTableState {
      * @defaultValue false
      */
     d_editing: boolean;
+}
+
+/**
+ * Defines current options in DataTable component.
+ */
+export interface DataTableContext {
+    /**
+     * Current index of the row.
+     */
+    index: number;
+    /**
+     * Current selectable state of row as a boolean.
+     * @defaultValue false
+     */
+    selectable: boolean;
+    /**
+     * Current selected state of row as a boolean.
+     * @defaultValue false
+     */
+    selected: boolean;
+    /**
+     * Current stripedRows state of row as a boolean.
+     * @defaultValue false
+     */
+    stripedRows: boolean;
 }
 
 /**
@@ -1010,6 +1039,10 @@ export interface DataTableProps {
      * @defaultValue false
      */
     stripedRows?: boolean | undefined;
+    /**
+     * Defines the size of the table.
+     */
+    size?: 'small' | 'large' | undefined;
     /**
      * Inline style of the table element.
      */

@@ -1,15 +1,15 @@
 <template>
     <Portal>
-        <div v-if="containerVisible" :ref="maskRef" @mousedown="onMaskClick" :class="cx('mask')" v-bind="ptm('mask')">
+        <div v-if="containerVisible" :ref="maskRef" @mousedown="onMaskClick" :class="cx('mask')" :style="sx('mask', true, { position })" v-bind="ptm('mask')">
             <transition name="p-sidebar" @enter="onEnter" @after-enter="onAfterEnter" @before-leave="onBeforeLeave" @leave="onLeave" @after-leave="onAfterLeave" appear>
                 <div v-if="visible" :ref="containerRef" v-focustrap :class="cx('root')" role="complementary" :aria-modal="modal" @keydown="onKeydown" v-bind="{ ...$attrs, ...ptm('root') }">
                     <div :ref="headerContainerRef" :class="cx('header')" v-bind="ptm('header')">
                         <div v-if="$slots.header" :class="cx('headerContent')" v-bind="ptm('headerContent')">
                             <slot name="header"></slot>
                         </div>
-                        <button v-if="showCloseIcon" :ref="closeButtonRef" v-ripple autofocus type="button" :class="cx('closeButton')" :aria-label="closeAriaLabel" @click="hide" v-bind="ptm('closeButton')">
+                        <button v-if="showCloseIcon" :ref="closeButtonRef" v-ripple autofocus type="button" :class="cx('closeButton')" :aria-label="closeAriaLabel" @click="hide" v-bind="ptm('closeButton')" data-pc-group-section="iconcontainer">
                             <slot name="closeicon">
-                                <component :is="closeIcon ? 'span' : 'TimesIcon'" :class="cx('closeIcon')" v-bind="ptm('closeIcon')"></component>
+                                <component :is="closeIcon ? 'span' : 'TimesIcon'" :class="[cx('closeIcon'), closeIcon]" v-bind="ptm('closeIcon')"></component>
                             </slot>
                         </button>
                     </div>
@@ -23,12 +23,12 @@
 </template>
 
 <script>
-import BaseSidebar from './BaseSidebar.vue';
 import FocusTrap from 'primevue/focustrap';
 import TimesIcon from 'primevue/icons/times';
 import Portal from 'primevue/portal';
 import Ripple from 'primevue/ripple';
 import { DomHandler, ZIndexUtils } from 'primevue/utils';
+import BaseSidebar from './BaseSidebar.vue';
 
 export default {
     name: 'Sidebar',
@@ -78,7 +78,7 @@ export default {
         },
         onBeforeLeave() {
             if (this.modal) {
-                DomHandler.addClass(this.mask, 'p-component-overlay-leave');
+                !this.isUnstyled && DomHandler.addClass(this.mask, 'p-component-overlay-leave');
             }
         },
         onLeave() {
@@ -150,12 +150,6 @@ export default {
         },
         closeButtonRef(el) {
             this.closeButton = el;
-        },
-        getPositionClass() {
-            const positions = ['left', 'right', 'top', 'bottom'];
-            const pos = positions.find((item) => item === this.position);
-
-            return pos ? `p-sidebar-${pos}` : '';
         },
         bindOutsideClickListener() {
             if (!this.outsideClickListener) {

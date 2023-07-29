@@ -8,16 +8,18 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { DropdownPassThroughOptionType } from '../dropdown';
 import { InputNumberPassThroughOptionType } from '../inputnumber';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type PaginatorPassThroughOptionType = PaginatorPassThroughAttributes | ((options: PaginatorPassThroughMethodOptions) => PaginatorPassThroughAttributes) | null | undefined;
+export declare type PaginatorPassThroughOptionType = PaginatorPassThroughAttributes | ((options: PaginatorPassThroughMethodOptions) => PaginatorPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface PaginatorPassThroughMethodOptions {
+    instance: any;
     props: PaginatorProps;
     state: PaginatorState;
     context: PaginatorContext;
@@ -28,6 +30,10 @@ export interface PaginatorPassThroughMethodOptions {
  * @see {@link PaginatorProps.pt}
  */
 export interface PaginatorPassThroughOptions {
+    /**
+     * Uses to pass attributes to the paginator wrapper's DOM element.
+     */
+    paginatorWrapper?: PaginatorPassThroughOptionType;
     /**
      * Uses to pass attributes to the root's DOM element.
      */
@@ -47,11 +53,11 @@ export interface PaginatorPassThroughOptions {
     /**
      * Uses to pass attributes to the prev page button's DOM element.
      */
-    prevPageButton?: PaginatorPassThroughOptionType;
+    previousPageButton?: PaginatorPassThroughOptionType;
     /**
      * Uses to pass attributes to the prev page icon's DOM element.
      */
-    prevPageIcon?: PaginatorPassThroughOptionType;
+    previousPageIcon?: PaginatorPassThroughOptionType;
     /**
      * Uses to pass attributes to the next page button's DOM element.
      */
@@ -84,21 +90,26 @@ export interface PaginatorPassThroughOptions {
      * Uses to pass attributes to the Dropdown component.
      * @see {@link DropdownPassThroughOptionType}
      */
-    RPPDropdown?: DropdownPassThroughOptionType;
+    rowPerPageDropdown?: DropdownPassThroughOptionType;
     /**
      * Uses to pass attributes to the Dropdown component.
      * @see {@link DropdownPassThroughOptionType}
      */
-    JTPDropdown?: DropdownPassThroughOptionType;
+    jumpToPageDropdown?: DropdownPassThroughOptionType;
     /**
      * Uses to pass attributes to the Dropdown component.
      * @see {@link InputNumberPassThroughOptionType}
      */
-    JTPInput?: InputNumberPassThroughOptionType;
+    jumpToPageInput?: InputNumberPassThroughOptionType;
     /**
      * Uses to pass attributes to the end's DOM element.
      */
     end?: PaginatorPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -189,7 +200,7 @@ export interface PaginatorProps {
      */
     rowsPerPageOptions?: number[] | undefined;
     /**
-     * Template of the paginator, can either be a string or an object with key-value pairs to define templates per breakpoint.
+     * Template of the paginator, can either be a string or an object with key-value pairs to define templates per breakpoint. Available templates are the following;
      *
      * - FirstPageLink
      * - PrevPageLink

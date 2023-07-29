@@ -7,14 +7,16 @@
  * @module skeleton
  *
  */
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type SkeletonPassThroughOptionType = SkeletonPassThroughAttributes | ((options: SkeletonPassThroughMethodOptions) => SkeletonPassThroughAttributes) | null | undefined;
+export declare type SkeletonPassThroughOptionType = SkeletonPassThroughAttributes | ((options: SkeletonPassThroughMethodOptions) => SkeletonPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface SkeletonPassThroughMethodOptions {
+    instance: any;
     props: SkeletonProps;
 }
 
@@ -27,6 +29,11 @@ export interface SkeletonPassThroughOptions {
      * Uses to pass attributes to the root's DOM element.
      */
     root?: SkeletonPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

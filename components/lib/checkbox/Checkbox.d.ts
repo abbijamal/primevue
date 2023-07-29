@@ -8,16 +8,19 @@
  *
  */
 import { InputHTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type CheckboxPassThroughOptionType = CheckboxPassThroughAttributes | ((options: CheckboxPassThroughMethodOptions) => CheckboxPassThroughAttributes) | null | undefined;
+export declare type CheckboxPassThroughOptionType = CheckboxPassThroughAttributes | ((options: CheckboxPassThroughMethodOptions) => CheckboxPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface CheckboxPassThroughMethodOptions {
+    instance: any;
     props: CheckboxProps;
     state: CheckboxState;
+    context: CheckboxContext;
 }
 
 /**
@@ -45,6 +48,11 @@ export interface CheckboxPassThroughOptions {
      * Uses to pass attributes to the hidden input's DOM element.
      */
     hiddenInput?: CheckboxPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -151,6 +159,30 @@ export interface CheckboxProps {
     unstyled?: boolean;
 }
 
+/**
+ * Defines current options in Checkbox component.
+ */
+export interface CheckboxContext {
+    /**
+     * Current checked state of the item as a boolean.
+     * @defaultValue false
+     */
+    checked: boolean;
+    /**
+     * Current focus state of the item as a boolean.
+     * @defaultValue false
+     */
+    focused: boolean;
+    /**
+     * Current disabled state of the item as a boolean.
+     * @defaultValue false
+     */
+    disabled: boolean;
+}
+
+/**
+ * Defines valid slots in Checkbox component.
+ */
 export interface CheckboxSlots {
     /**
      * Custom icon template.

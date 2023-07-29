@@ -8,15 +8,17 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { MenuItem } from '../menuitem';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type MenuPassThroughOptionType = MenuPassThroughAttributes | ((options: MenuPassThroughMethodOptions) => MenuPassThroughAttributes) | null | undefined;
+export declare type MenuPassThroughOptionType = MenuPassThroughAttributes | ((options: MenuPassThroughMethodOptions) => MenuPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface MenuPassThroughMethodOptions {
+    instance: any;
     props: MenuProps;
     state: MenuState;
     context: MenuContext;
@@ -71,6 +73,11 @@ export interface MenuPassThroughOptions {
      * Uses to pass attributes to the end of the component.
      */
     end?: MenuPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -112,6 +119,14 @@ export interface MenuState {
  * Defines current options in Menu component.
  */
 export interface MenuContext {
+    /**
+     * Current menuitem
+     */
+    item: any;
+    /**
+     * Current index of the menuitem.
+     */
+    index: number;
     /**
      * Current focused state of menuitem as a boolean.
      * @defaultValue false

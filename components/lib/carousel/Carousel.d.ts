@@ -8,14 +8,16 @@
  *
  */
 import { ButtonHTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type CarouselPassThroughOptionType = CarouselPassThroughAttributes | ((options: CarouselPassThroughMethodOptions) => CarouselPassThroughAttributes) | null | undefined;
+export declare type CarouselPassThroughOptionType = CarouselPassThroughAttributes | ((options: CarouselPassThroughMethodOptions) => CarouselPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface CarouselPassThroughMethodOptions {
+    instance: any;
     props: CarouselProps;
     state: CarouselState;
 }
@@ -89,6 +91,11 @@ export interface CarouselPassThroughOptions {
      * Uses to pass attributes to the footer's DOM element.
      */
     footer?: CarouselPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

@@ -1,6 +1,6 @@
 <template>
     <Portal>
-        <div ref="container" :class="cx('root')" v-bind="{ ...$attrs, ...ptm('root') }">
+        <div ref="container" :class="cx('root')" :style="sx('root', true, { position })" v-bind="{ ...$attrs, ...ptm('root') }">
             <transition-group name="p-toast-message" tag="div" @enter="onEnter" @leave="onLeave" v-bind="ptm('message')">
                 <ToastMessage
                     v-for="msg of messages"
@@ -22,10 +22,10 @@
 </template>
 
 <script>
-import BaseToast from './BaseToast.vue';
 import Portal from 'primevue/portal';
 import ToastEventBus from 'primevue/toasteventbus';
 import { ObjectUtils, UniqueComponentId, ZIndexUtils } from 'primevue/utils';
+import BaseToast from './BaseToast.vue';
 import ToastMessage from './ToastMessage.vue';
 
 var messageIdx = 0;
@@ -35,7 +35,6 @@ export default {
     extends: BaseToast,
     inheritAttrs: false,
     emits: ['close', 'life-end'],
-
     data() {
         return {
             messages: []
@@ -111,7 +110,7 @@ export default {
             }
         },
         createStyle() {
-            if (!this.styleElement) {
+            if (!this.styleElement && !this.isUnstyled) {
                 this.styleElement = document.createElement('style');
                 this.styleElement.type = 'text/css';
                 document.head.appendChild(this.styleElement);

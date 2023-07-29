@@ -8,15 +8,17 @@
  *
  */
 import { HTMLAttributes, InputHTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 import { VirtualScrollerItemOptions, VirtualScrollerPassThroughOptionType, VirtualScrollerProps } from '../virtualscroller';
 
-export declare type DropdownPassThroughOptionType = DropdownPassThroughAttributes | ((options: DropdownPassThroughMethodOptions) => DropdownPassThroughAttributes) | null | undefined;
+export declare type DropdownPassThroughOptionType = DropdownPassThroughAttributes | ((options: DropdownPassThroughMethodOptions) => DropdownPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface DropdownPassThroughMethodOptions {
+    instance: any;
     props: DropdownProps;
     state: DropdownState;
     context: DropdownContext;
@@ -142,6 +144,11 @@ export interface DropdownPassThroughOptions {
      * Uses to pass attributes to the hidden last focusable element's DOM element.
      */
     hiddenLastFocusableEl?: DropdownPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

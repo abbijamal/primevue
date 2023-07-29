@@ -9,14 +9,16 @@
  */
 import { VNode } from 'vue';
 import { AccordionTabPassThroughOptionType } from '../accordiontab';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type AccordionPassThroughOptionType = AccordionPassThroughAttributes | ((options: AccordionPassThroughMethodOptions) => AccordionPassThroughAttributes) | null | undefined;
+export declare type AccordionPassThroughOptionType = AccordionPassThroughAttributes | ((options: AccordionPassThroughMethodOptions) => AccordionPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface AccordionPassThroughMethodOptions {
+    instance: any;
     props: AccordionProps;
     state: AccordionState;
 }
@@ -61,8 +63,18 @@ export interface AccordionPassThroughOptions {
     root?: AccordionPassThroughOptionType;
     /**
      * Uses to pass attributes to AccordionTab helper components.
+     * @deprecated since v3.30.1. Use 'accordiontab' property instead.
      */
     tab?: AccordionTabPassThroughOptionType;
+    /**
+     * Uses to pass attributes to AccordionTab helper components.
+     */
+    accordiontab?: AccordionTabPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

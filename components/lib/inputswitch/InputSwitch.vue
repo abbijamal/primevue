@@ -1,6 +1,6 @@
 <template>
     <div :class="cx('root')" :style="sx('root')" @click="onClick($event)" v-bind="ptm('root')" data-pc-name="inputswitch">
-        <div :class="cx('hiddenInputWrapper')" :style="sx('hiddenAccessible', isUnstyled)" v-bind="ptm('hiddenInputWrapper')" :data-p-hidden-accessible="true">
+        <div class="p-hidden-accessible" v-bind="ptm('hiddenInputWrapper')" :data-p-hidden-accessible="true">
             <input
                 ref="input"
                 :id="inputId"
@@ -15,10 +15,10 @@
                 :aria-label="ariaLabel"
                 @focus="onFocus($event)"
                 @blur="onBlur($event)"
-                v-bind="ptm('hiddenInput')"
+                v-bind="{ ...inputProps, ...ptm('hiddenInput') }"
             />
         </div>
-        <span :class="cx('slider')" v-bind="{ ...inputProps, ...ptm('slider') }"></span>
+        <span :class="cx('slider')" v-bind="ptm('slider')"></span>
     </div>
 </template>
 

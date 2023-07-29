@@ -8,17 +8,19 @@
  *
  */
 import { ButtonHTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ButtonPassThroughOptions } from '../button';
 import { MenuItem } from '../menuitem';
 import { TieredMenuPassThroughOptions } from '../tieredmenu';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type SplitButtonPassThroughOptionType = SplitButtonPassThroughAttributes | ((options: SplitButtonPassThroughMethodOptions) => SplitButtonPassThroughAttributes) | null | undefined;
+export declare type SplitButtonPassThroughOptionType = SplitButtonPassThroughAttributes | ((options: SplitButtonPassThroughMethodOptions) => SplitButtonPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface SplitButtonPassThroughMethodOptions {
+    instance: any;
     props: SplitButtonProps;
     state: SplitButtonState;
 }
@@ -46,6 +48,11 @@ export interface SplitButtonPassThroughOptions {
      * @see {@link TieredMenuPassThroughOptions}
      */
     menu?: TieredMenuPassThroughOptions;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -181,11 +188,21 @@ export interface SplitButtonSlots {
     /**
      * Custom menu button icon template.
      */
-    icon(): VNode[];
+    icon(scope: {
+        /**
+         * Style class of the icon.
+         */
+        class: string;
+    }): VNode[];
     /**
      * Custom menu button icon template.
      */
-    menubuttonicon(): VNode[];
+    menubuttonicon(scope: {
+        /**
+         * Style class of the icon.
+         */
+        class: string;
+    }): VNode[];
 }
 
 /**

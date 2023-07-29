@@ -44,6 +44,7 @@
                     :optionGroupChildren="optionGroupChildren"
                     @option-change="onOptionChange"
                     :pt="pt"
+                    :unstyled="unstyled"
                 />
             </li>
         </template>
@@ -58,6 +59,7 @@ import { DomHandler, ObjectUtils } from 'primevue/utils';
 
 export default {
     name: 'CascadeSelectSub',
+    hostName: 'CascadeSelect',
     extends: BaseComponent,
     emits: ['option-change'],
     props: {

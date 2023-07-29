@@ -8,17 +8,20 @@
  *
  */
 import { ButtonHTMLAttributes, HTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ButtonPassThroughOptionType } from '../button';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type PickListPassThroughOptionType = PickListPassThroughAttributes | ((options: PickListPassThroughMethodOptions) => PickListPassThroughAttributes) | null | undefined;
+export declare type PickListPassThroughOptionType = PickListPassThroughAttributes | ((options: PickListPassThroughMethodOptions) => PickListPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface PickListPassThroughMethodOptions {
+    instance: any;
     props: PickListProps;
     state: PickListState;
+    context: PickListContext;
 }
 
 /**
@@ -169,6 +172,10 @@ export interface PickListPassThroughOptions {
      */
     targetList?: PickListPassThroughOptionType;
     /**
+     * Uses to pass attributes to the target item's DOM element.
+     */
+    item?: PickListPassThroughOptionType;
+    /**
      * Uses to pass attributes to the target controls' DOM element.
      */
     targetControls?: PickListPassThroughOptionType;
@@ -188,6 +195,11 @@ export interface PickListPassThroughOptions {
      * Uses to pass attributes to the Button component.
      */
     targetMoveBottomButton?: ButtonPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -240,6 +252,22 @@ export interface PickListState {
 }
 
 /**
+ * Defines current options in PickList component.
+ */
+export interface PickListContext {
+    /**
+     * Current active state of the item as a boolean.
+     * @defaultValue false
+     */
+    active: boolean;
+    /**
+     * Current focus state of the item as a boolean.
+     * @defaultValue false
+     */
+    focused: boolean;
+}
+
+/**
  * Defines valid properties in PickList component.
  */
 export interface PickListProps {
@@ -283,12 +311,12 @@ export interface PickListProps {
     stripedRows?: boolean | undefined;
     /**
      * Whether to show buttons of source list.
-     * @defaultValue false
+     * @defaultValue true
      */
     showSourceControls?: boolean | undefined;
     /**
      * Whether to show buttons of target list.
-     * @defaultValue false
+     * @defaultValue true
      */
     showTargetControls?: boolean | undefined;
     /**

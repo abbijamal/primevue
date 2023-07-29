@@ -8,6 +8,9 @@
  *
  */
 import { DirectiveBinding, ObjectDirective } from 'vue';
+import { DirectiveHooks } from '../basedirective';
+
+export declare type TooltipDirectivePassThroughOptionType = TooltipDirectivePassThroughAttributes | null | undefined;
 
 /**
  * Defines options of Tooltip.
@@ -50,6 +53,47 @@ export interface TooltipOptions {
      * @defaultValue 0
      */
     hideDelay?: number | undefined;
+    /**
+     * Uses to pass attributes to DOM elements inside the component.
+     * @type {TooltipDirectivePassThroughOptions}
+     */
+    pt?: TooltipDirectivePassThroughOptions;
+    /**
+     * When enabled, it removes component related styles in the core.
+     * @defaultValue false
+     */
+    unstyled?: boolean;
+}
+
+/**
+ * Custom passthrough(pt) options.
+ * @see {@link TooltipOptions.pt}
+ */
+export interface TooltipDirectivePassThroughOptions {
+    /**
+     * Uses to pass attributes to the root's DOM element.
+     */
+    root?: TooltipDirectivePassThroughOptionType;
+    /**
+     * Uses to pass attributes to the text's DOM element.
+     */
+    text?: TooltipDirectivePassThroughOptionType;
+    /**
+     * Uses to pass attributes to the arrow's DOM element.
+     */
+    arrow?: TooltipDirectivePassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseDirective.DirectiveHooks}
+     */
+    hooks?: DirectiveHooks;
+}
+
+/**
+ * Custom passthrough attributes for each DOM elements
+ */
+export interface TooltipDirectivePassThroughAttributes {
+    [key: string]: any;
 }
 
 /**

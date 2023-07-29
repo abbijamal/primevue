@@ -13,7 +13,6 @@
         :tabindex="index === 0 ? 0 : -1"
         @keydown="onKeyDown"
         v-bind="level === 1 ? getPTOptions('node') : ptm('subgroup')"
-        data-pc-section="treeitem"
     >
         <div :class="cx('content')" @click="onClick" @touchend="onTouchEnd" :style="node.style" v-bind="getPTOptions('content')" :data-p-highlight="checkboxMode ? checked : selected" :data-p-selectable="selectable">
             <button v-ripple type="button" :class="cx('toggler')" @click="toggle" tabindex="-1" aria-hidden="true" v-bind="getPTOptions('toggler')">
@@ -22,7 +21,7 @@
                 <component v-else :is="node.collapsedIcon ? 'span' : 'ChevronRightIcon'" :class="cx('togglerIcon')" v-bind="getPTOptions('togglerIcon')" />
             </button>
             <div v-if="checkboxMode" :class="cx('checkboxContainer')" aria-hidden="true" v-bind="getPTOptions('checkboxContainer')">
-                <div :class="cx('checkbox')" role="checkbox" v-bind="getPTOptions('checkbox')" :data-p-checked="checked" :data-p-partialchecked="partialchecked">
+                <div :class="cx('checkbox')" role="checkbox" v-bind="getPTOptions('checkbox')" :data-p-checked="checked" :data-p-partialchecked="partialChecked">
                     <component v-if="templates['checkboxicon']" :is="templates['checkboxicon']" :checked="checked" :partialChecked="partialChecked" :class="cx('checkboxIcon')" />
                     <component v-else :is="checked ? 'CheckIcon' : partialChecked ? 'MinusIcon' : null" :class="cx('checkboxIcon')" v-bind="getPTOptions('checkboxIcon')" />
                 </div>
@@ -63,6 +62,7 @@ import { DomHandler } from 'primevue/utils';
 
 export default {
     name: 'TreeNode',
+    hostName: 'Tree',
     extends: BaseComponent,
     emits: ['node-toggle', 'node-click', 'checkbox-change'],
     props: {
@@ -114,9 +114,11 @@ export default {
         getPTOptions(key) {
             return this.ptm(key, {
                 context: {
+                    index: this.index,
                     expanded: this.expanded,
                     selected: this.selected,
-                    checked: this.checked
+                    checked: this.checked,
+                    leaf: this.leaf
                 }
             });
         },
@@ -185,7 +187,7 @@ export default {
             }
         },
         onArrowDown(event) {
-            const nodeElement = event.target;
+            const nodeElement = event.target.getAttribute('data-pc-section') === 'toggler' ? event.target.closest('[role="treeitem"]') : event.target;
             const listElement = nodeElement.children[1];
 
             if (listElement) {
@@ -258,7 +260,7 @@ export default {
             this.setAllNodesTabIndexes();
         },
         setAllNodesTabIndexes() {
-            const nodes = DomHandler.find(this.$refs.currentNode.closest('[data-pc-section="container"]'), '[data-pc-section="treeitem"]');
+            const nodes = DomHandler.find(this.$refs.currentNode.closest('[data-pc-section="container"]'), '[role="treeitem"]');
 
             const hasSelectedNode = [...nodes].some((node) => node.getAttribute('aria-selected') === 'true' || node.getAttribute('aria-checked') === 'true');
 
@@ -278,7 +280,7 @@ export default {
         },
         setTabIndexForSelectionMode(event, nodeTouched) {
             if (this.selectionMode !== null) {
-                const elements = [...DomHandler.find(this.$refs.currentNode.parentElement, '[data-pc-section="treeitem"]')];
+                const elements = [...DomHandler.find(this.$refs.currentNode.parentElement, '[role="treeitem"]')];
 
                 event.currentTarget.tabIndex = nodeTouched === false ? -1 : 0;
 
@@ -385,7 +387,7 @@ export default {
         getParentNodeElement(nodeElement) {
             const parentNodeElement = nodeElement.parentElement.parentElement;
 
-            return DomHandler.getAttribute(parentNodeElement, 'data-pc-section') === 'treeitem' ? parentNodeElement : null;
+            return DomHandler.getAttribute(parentNodeElement, 'role') === 'treeitem' ? parentNodeElement : null;
         },
         focusNode(element) {
             element.focus();
@@ -394,7 +396,7 @@ export default {
             return this.selectionMode === 'checkbox';
         },
         isSameNode(event) {
-            return event.currentTarget && (event.currentTarget.isSameNode(event.target) || event.currentTarget.isSameNode(event.target.closest('[data-pc-section="treeitem"]')));
+            return event.currentTarget && (event.currentTarget.isSameNode(event.target) || event.currentTarget.isSameNode(event.target.closest('[role="treeitem"]')));
         }
     },
     computed: {

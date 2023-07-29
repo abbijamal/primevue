@@ -8,16 +8,18 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ButtonPassThroughOptions } from '../button';
 import { ConfirmationOptions } from '../confirmationoptions';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type ConfirmPopupPassThroughOptionType = ConfirmPopupPassThroughAttributes | ((options: ConfirmPopupPassThroughMethodOptions) => ConfirmPopupPassThroughAttributes) | null | undefined;
+export declare type ConfirmPopupPassThroughOptionType = ConfirmPopupPassThroughAttributes | ((options: ConfirmPopupPassThroughMethodOptions) => ConfirmPopupPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface ConfirmPopupPassThroughMethodOptions {
+    instance: any;
     props: ConfirmPopupProps;
     state: ConfirmPopupState;
 }
@@ -57,6 +59,11 @@ export interface ConfirmPopupPassThroughOptions {
      * @see {@link ButtonPassThroughOptions}
      */
     acceptButton?: ButtonPassThroughOptions;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

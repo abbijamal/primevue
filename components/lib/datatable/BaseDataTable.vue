@@ -7,10 +7,6 @@ const styles = `
     position: relative;
 }
 
-.p-datatable > .p-datatable-wrapper {
-    overflow: auto;
-}
-
 .p-datatable-table {
     border-spacing: 0px;
     width: 100%;
@@ -43,7 +39,6 @@ const styles = `
 }
 
 .p-datatable-scrollable-table > .p-datatable-thead {
-    position: sticky;
     top: 0;
     z-index: 1;
 }
@@ -54,7 +49,6 @@ const styles = `
 }
 
 .p-datatable-scrollable-table > .p-datatable-tfoot {
-    position: sticky;
     bottom: 0;
     z-index: 1;
 }
@@ -245,6 +239,12 @@ const styles = `
 }
 `;
 
+const inlineStyles = {
+    wrapper: { overflow: 'auto' },
+    thead: { position: 'sticky' },
+    tfoot: { position: 'sticky' }
+};
+
 const classes = {
     root: ({ instance, props }) => [
         'p-datatable p-component',
@@ -259,7 +259,9 @@ const classes = {
             'p-datatable-striped': props.stripedRows,
             'p-datatable-gridlines': props.showGridlines,
             'p-datatable-grouped-header': instance.headerColumnGroup != null,
-            'p-datatable-grouped-footer': instance.footerColumnGroup != null
+            'p-datatable-grouped-footer': instance.footerColumnGroup != null,
+            'p-datatable-sm': props.size === 'small',
+            'p-datatable-lg': props.size === 'large'
         }
     ],
     loadingOverlay: 'p-datatable-loading-overlay p-component-overlay',
@@ -309,7 +311,6 @@ const classes = {
             'p-disabled': instance.disabled
         }
     ],
-    hiddenHeaderInputWrapper: 'p-hidden-accessible',
     headerCheckbox: ({ instance }) => [
         'p-checkbox-box p-component',
         {
@@ -423,7 +424,6 @@ const classes = {
             'p-checkbox-focused': instance.focused
         }
     ],
-    hiddenInputWrapper: 'p-hidden-accessible',
     checkbox: ({ instance }) => [
         'p-checkbox-box p-component',
         {
@@ -465,7 +465,7 @@ const classes = {
     reorderIndicatorDown: 'p-datatable-reorder-indicator-down'
 };
 
-const { load: loadStyle } = useStyle(styles, { id: 'primevue_datatable_style', manual: true });
+const { load: loadStyle } = useStyle(styles, { name: 'datatable', manual: true });
 
 export default {
     name: 'BaseDataTable',
@@ -711,6 +711,10 @@ export default {
             type: Boolean,
             default: false
         },
+        size: {
+            type: String,
+            default: null
+        },
         tableStyle: {
             type: null,
             default: null
@@ -730,6 +734,7 @@ export default {
     },
     css: {
         classes,
+        inlineStyles,
         loadStyle
     },
     provide() {

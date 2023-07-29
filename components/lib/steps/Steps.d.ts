@@ -8,16 +8,19 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { MenuItem } from '../menuitem';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type StepsPassThroughOptionType = StepsPassThroughAttributes | ((options: StepsPassThroughMethodOptions) => StepsPassThroughAttributes) | null | undefined;
+export declare type StepsPassThroughOptionType = StepsPassThroughAttributes | ((options: StepsPassThroughMethodOptions) => StepsPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface StepsPassThroughMethodOptions {
+    instance: any;
     props: StepsProps;
+    context: StepsContext;
 }
 
 /**
@@ -49,6 +52,11 @@ export interface StepsPassThroughOptions {
      * Uses to pass attributes to the label's DOM element.
      */
     label?: StepsPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -56,6 +64,30 @@ export interface StepsPassThroughOptions {
  */
 export interface StepsPassThroughAttributes {
     [key: string]: any;
+}
+
+/**
+ * Defines current options in Steps component.
+ */
+export interface StepsContext {
+    /**
+     * Current menuitem
+     */
+    item: any;
+    /**
+     * Index of the menuitem.
+     */
+    index: number;
+    /**
+     * Current active state of menuitem as a boolean.
+     * @defaultValue false
+     */
+    active: boolean;
+    /**
+     * Current disabled state of menuitem as a boolean.
+     * @defaultValue false
+     */
+    disabled: boolean;
 }
 
 /**

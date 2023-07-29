@@ -8,15 +8,17 @@
  *
  */
 import { ButtonHTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { MenuItem } from '../menuitem';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type MenubarPassThroughOptionType = MenubarPassThroughAttributes | ((options: MenubarPassThroughMethodOptions) => MenubarPassThroughAttributes) | null | undefined;
+export declare type MenubarPassThroughOptionType = MenubarPassThroughAttributes | ((options: MenubarPassThroughMethodOptions) => MenubarPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface MenubarPassThroughMethodOptions {
+    instance: any;
     props: MenubarProps;
     state: MenubarState;
     context: MenubarContext;
@@ -83,6 +85,11 @@ export interface MenubarPassThroughOptions {
      * Uses to pass attributes to the end of the component.
      */
     end?: MenubarPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -144,6 +151,14 @@ export interface MenubarState {
  * Defines current options in Menubar component.
  */
 export interface MenubarContext {
+    /**
+     * Current menuitem
+     */
+    item: any;
+    /**
+     * Current index of the menuitem.
+     */
+    index: number;
     /**
      * Current active state of menuitem as a boolean.
      * @defaultValue false

@@ -8,15 +8,17 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { MenuItem } from '../menuitem';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type MegaMenuPassThroughOptionType = MegaMenuPassThroughAttributes | ((options: MegaMenuPassThroughMethodOptions) => MegaMenuPassThroughAttributes) | null | undefined;
+export declare type MegaMenuPassThroughOptionType = MegaMenuPassThroughAttributes | ((options: MegaMenuPassThroughMethodOptions) => MegaMenuPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface MegaMenuPassThroughMethodOptions {
+    instance: any;
     props: MegaMenuProps;
     state: MegaMenuState;
     context: MegaMenuContext;
@@ -91,6 +93,11 @@ export interface MegaMenuPassThroughOptions {
      * Uses to pass attributes to the end of the component.
      */
     end?: MegaMenuPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -147,6 +154,14 @@ export interface MegaMenuState {
  * Defines current options in MegaMenu component.
  */
 export interface MegaMenuContext {
+    /**
+     * Current menuitem
+     */
+    item: any;
+    /**
+     * Current index of the menuitem.
+     */
+    index: number;
     /**
      * Current active state of menuitem as a boolean.
      * @defaultValue false

@@ -8,14 +8,16 @@
  *
  */
 import { HTMLAttributes, InputHTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type CascadeSelectPassThroughOptionType = CascadeSelectPassThroughAttributes | ((options: CascadeSelectPassThroughMethodOptions) => CascadeSelectPassThroughAttributes) | null | undefined;
+export declare type CascadeSelectPassThroughOptionType = CascadeSelectPassThroughAttributes | ((options: CascadeSelectPassThroughMethodOptions) => CascadeSelectPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface CascadeSelectPassThroughMethodOptions {
+    instance: any;
     props: CascadeSelectProps;
     state: CascadeSelectState;
 }
@@ -63,13 +65,13 @@ export interface CascadeSelectPassThroughOptions {
      */
     dropdownButton?: CascadeSelectPassThroughOptionType;
     /**
-     * Uses to pass attributes to the loading icon's DOM element.
-     */
-    loadingIcon?: CascadeSelectPassThroughOptionType;
-    /**
      * Uses to pass attributes to the dropdown icon's DOM element.
      */
     dropdownIcon?: CascadeSelectPassThroughOptionType;
+    /**
+     * Uses to pass attributes to the loading icon's DOM element.
+     */
+    loadingIcon?: CascadeSelectPassThroughOptionType;
     /**
      * Uses to pass attributes to the panel's DOM element.
      */
@@ -103,9 +105,10 @@ export interface CascadeSelectPassThroughOptions {
      */
     hiddenSearchResult?: CascadeSelectPassThroughOptionType;
     /**
-     * Uses to pass attributes to the selected message text aria's DOM element.
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
      */
-    selectedMessageAria?: CascadeSelectPassThroughOptionType;
+    hooks?: ComponentHooks;
 }
 
 /**

@@ -1,9 +1,9 @@
 <template>
     <div :class="containerClass" :style="style" v-bind="ptm('root')" data-pc-name="splitbutton" :data-pc-severity="severity">
         <slot>
-            <PVSButton type="button" :class="cx('button')" :label="label" :disabled="disabled" :aria-label="label" @click="onDefaultButtonClick" :pt="ptm('button')" v-bind="buttonProps">
-                <template #icon="slotProps">
-                    <slot name="icon">
+            <PVSButton type="button" :class="cx('button')" :label="label" :disabled="disabled" :aria-label="label" @click="onDefaultButtonClick" :pt="ptm('button')" v-bind="buttonProps" :unstyled="unstyled" data-pc-section="button">
+                <template v-if="icon" #icon="slotProps">
+                    <slot name="icon" :class="slotProps.class">
                         <span :class="[icon, slotProps.class]" v-bind="ptm('button')['icon']" />
                     </slot>
                 </template>
@@ -21,14 +21,16 @@
             @keydown="onDropdownKeydown"
             :pt="ptm('menuButton')"
             v-bind="menuButtonProps"
+            :unstyled="unstyled"
+            data-pc-section="menubutton"
         >
             <template #icon="slotProps">
-                <slot name="menubuttonicon">
+                <slot name="menubuttonicon" :class="slotProps.class">
                     <component :is="menuButtonIcon ? 'span' : 'ChevronDownIcon'" :class="[menuButtonIcon, slotProps.class]" v-bind="ptm('menuButton')['icon']" />
                 </slot>
             </template>
         </PVSButton>
-        <PVSMenu ref="menu" :id="ariaId + '_overlay'" :model="model" :popup="true" :autoZIndex="autoZIndex" :baseZIndex="baseZIndex" :appendTo="appendTo" :pt="ptm('menu')" />
+        <PVSMenu ref="menu" :id="ariaId + '_overlay'" :model="model" :popup="true" :autoZIndex="autoZIndex" :baseZIndex="baseZIndex" :appendTo="appendTo" :unstyled="unstyled" :pt="ptm('menu')" />
     </div>
 </template>
 
@@ -48,10 +50,15 @@ export default {
             isExpanded: false
         };
     },
+    mounted() {
+        this.$watch('$refs.menu.visible', (newValue) => {
+            this.isExpanded = newValue;
+        });
+    },
     methods: {
         onDropdownButtonClick() {
             this.$refs.menu.toggle({ currentTarget: this.$el, relatedTarget: this.$refs.button.$el });
-            this.isExpanded = !this.$refs.menu.visible;
+            this.isExpanded = this.$refs.menu.visible;
         },
         onDropdownKeydown(event) {
             if (event.code === 'ArrowDown' || event.code === 'ArrowUp') {

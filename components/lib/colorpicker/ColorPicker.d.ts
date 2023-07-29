@@ -7,14 +7,16 @@
  * @module colorpicker
  *
  */
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type ColorPickerPassThroughOptionType = ColorPickerPassThroughAttributes | ((options: ColorPickerPassThroughMethodOptions) => ColorPickerPassThroughAttributes) | null | undefined;
+export declare type ColorPickerPassThroughOptionType = ColorPickerPassThroughAttributes | ((options: ColorPickerPassThroughMethodOptions) => ColorPickerPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface ColorPickerPassThroughMethodOptions {
+    instance: any;
     props: ColorPickerProps;
     state: ColorPickerState;
 }
@@ -75,6 +77,11 @@ export interface ColorPickerPassThroughOptions {
      * Uses to pass attributes to the hue handler's DOM element.
      */
     hueHandle: ColorPickerPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

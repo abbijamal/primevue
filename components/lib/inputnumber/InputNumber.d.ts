@@ -8,16 +8,18 @@
  *
  */
 import { ButtonHTMLAttributes, InputHTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ButtonPassThroughOptionType } from '../button';
 import { InputTextPassThroughOptionType } from '../inputtext';
 import { ClassComponent, GlobalComponentConstructor, Nullable } from '../ts-helpers';
 
-export declare type InputNumberPassThroughOptionType = InputNumberPassThroughAttributes | ((options: InputNumberPassThroughMethodOptions) => InputNumberPassThroughAttributes) | null | undefined;
+export declare type InputNumberPassThroughOptionType = InputNumberPassThroughAttributes | ((options: InputNumberPassThroughMethodOptions) => InputNumberPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface InputNumberPassThroughMethodOptions {
+    instance: any;
     props: InputNumberProps;
     state: InputNumberState;
 }
@@ -80,6 +82,11 @@ export interface InputNumberPassThroughOptions {
      * @see {@link ButtonPassThroughOptions}
      */
     decrementButton?: ButtonPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

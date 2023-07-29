@@ -8,14 +8,16 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type BadgePassThroughOptionType = BadgePassThroughAttributes | ((options: BadgePassThroughMethodOptions) => BadgePassThroughAttributes) | null | undefined;
+export declare type BadgePassThroughOptionType = BadgePassThroughAttributes | ((options: BadgePassThroughMethodOptions) => BadgePassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface BadgePassThroughMethodOptions {
+    instance: any;
     props: BadgeProps;
 }
 
@@ -35,6 +37,11 @@ export interface BadgePassThroughOptions {
      * Uses to pass attributes to the root's DOM element.
      */
     root?: BadgePassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

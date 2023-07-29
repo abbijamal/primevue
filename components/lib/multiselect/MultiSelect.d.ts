@@ -8,15 +8,17 @@
  *
  */
 import { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 import { VirtualScrollerItemOptions, VirtualScrollerPassThroughOptionType, VirtualScrollerProps } from '../virtualscroller';
 
-export declare type MultiSelectPassThroughOptionType = MultiSelectPassThroughAttributes | ((options: MultiSelectPassThroughMethodOptions) => MultiSelectPassThroughAttributes) | null | undefined;
+export declare type MultiSelectPassThroughOptionType = MultiSelectPassThroughAttributes | ((options: MultiSelectPassThroughMethodOptions) => MultiSelectPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface MultiSelectPassThroughMethodOptions {
+    instance: any;
     props: MultiSelectProps;
     state: MultiSelectState;
     context: MultiSelectContext;
@@ -76,10 +78,6 @@ export interface MultiSelectPassThroughOptions {
      * Uses to pass attributes to the root's DOM element.
      */
     root?: MultiSelectPassThroughOptionType;
-    /**
-     * Uses to pass attributes to the input's DOM element.
-     */
-    input?: MultiSelectPassThroughOptionType;
     /**
      * Uses to pass attributes to the label container's DOM element.
      */
@@ -213,6 +211,11 @@ export interface MultiSelectPassThroughOptions {
      * Uses to pass attributes to the hidden last focusable element's DOM element.
      */
     hiddenLastFocusableEl?: MultiSelectPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

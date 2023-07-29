@@ -57,7 +57,7 @@ const styles = `
 `;
 
 const classes = {
-    root: ({ instance }) => ['p-steps p-component', { 'p-readonly': instance.readonly }],
+    root: ({ props }) => ['p-steps p-component', { 'p-readonly': props.readonly }],
     menu: 'p-steps-list',
     menuitem: ({ instance, item }) => [
         'p-steps-item',
@@ -77,7 +77,7 @@ const classes = {
     label: 'p-steps-title'
 };
 
-const { load: loadStyle } = useStyle(styles, { id: 'primevue_steps_style', manual: true });
+const { load: loadStyle } = useStyle(styles, { name: 'steps', manual: true });
 
 export default {
     name: 'BaseSteps',

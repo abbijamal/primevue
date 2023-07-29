@@ -10,18 +10,20 @@
  */
 
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ButtonPassThroughOptionType } from '../button';
 import { DataTablePassThroughOptions } from '../datatable';
 import { DropdownPassThroughOptionType } from '../dropdown';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 import { VirtualScrollerLoaderOptions } from '../virtualscroller';
 
-export declare type ColumnPassThroughOptionType = ColumnPassThroughAttributes | ((options: ColumnPassThroughMethodOptions) => ColumnPassThroughAttributes) | null | undefined;
+export declare type ColumnPassThroughOptionType = ColumnPassThroughAttributes | ((options: ColumnPassThroughMethodOptions) => ColumnPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface ColumnPassThroughMethodOptions {
+    instance: any;
     props: ColumnProps;
     parent: DataTablePassThroughOptions;
     context: ColumnContext;
@@ -139,6 +141,10 @@ export interface ColumnPassThroughOptions {
      * Uses to pass attributes to the filter menu button's DOM element.
      */
     filterMenuButton?: ColumnPassThroughOptionType;
+    /**
+     * Uses to pass attributes to the filter menu icon's DOM element.
+     */
+    filterMenuIcon?: ColumnPassThroughOptionType;
     /**
      * Uses to pass attributes to the header filter clear button's DOM element.
      */
@@ -274,13 +280,13 @@ export interface ColumnPassThroughOptions {
      */
     rowEditorInitIcon?: ColumnPassThroughOptionType;
     /**
-     * Uses to pass attributes to the row editor edit button's DOM element.
+     * Uses to pass attributes to the row editor save button's DOM element.
      */
-    rowEditorEditButton?: ColumnPassThroughOptionType;
+    rowEditorSaveButton?: ColumnPassThroughOptionType;
     /**
-     * Uses to pass attributes to the row editor edit icon's DOM element.
+     * Uses to pass attributes to the row editor save icon's DOM element.
      */
-    rowEditorEditIcon?: ColumnPassThroughOptionType;
+    rowEditorSaveIcon?: ColumnPassThroughOptionType;
     /**
      * Uses to pass attributes to the row editor cancel button's DOM element.
      */
@@ -289,7 +295,14 @@ export interface ColumnPassThroughOptions {
      * Uses to pass attributes to the row editor cancel icon's DOM element.
      */
     rowEditorCancelIcon?: ColumnPassThroughOptionType;
-
+    /**
+     * Uses to pass attributes to the footer cell's DOM element.
+     */
+    footerCell?: ColumnPassThroughOptionType;
+    /**
+     * Uses to pass attributes to the body cell content's DOM element.
+     */
+    bodyCellContent?: ColumnPassThroughOptionType;
     /**
      * Uses to pass attributes to the hidden input wrapper's DOM element.
      */
@@ -306,6 +319,11 @@ export interface ColumnPassThroughOptions {
      * Uses to pass attributes to the hidden input's DOM element.
      */
     hiddenInput?: ColumnPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -580,6 +598,50 @@ export interface ColumnContext {
      * @defaultValue false
      */
     disabled: boolean;
+    /**
+     * Current sort state of the column as a boolean.
+     * @defaultValue false
+     */
+    sorted: boolean;
+    /**
+     * Current frozen state of the column as a boolean.
+     * @defaultValue false
+     */
+    frozen: boolean;
+    /**
+     * Current resizable state of the column as a boolean.
+     * @defaultValue false
+     */
+    resizable: boolean;
+    /**
+     * Current size state of the table.
+     */
+    size: string;
+    /**
+     * Current gridlines state of the table as a boolean.
+     * @defaultValue false
+     */
+    showGridlines: boolean;
+    /**
+     * Current highlighted state of the filter row item as a boolean.
+     * @defaultValue false
+     */
+    highlighted: boolean;
+    /**
+     * Current hidden state of the filter clear button of a column as a boolean.
+     * @defaultValue false
+     */
+    hidden: boolean;
+    /**
+     * Current visible state of the filter menu of a column as a boolean.
+     * @defaultValue false
+     */
+    overlayVisible: boolean;
+    /**
+     * Current active state of the filter menu of a column as a boolean.
+     * @defaultValue false
+     */
+    active: boolean;
 }
 
 /**
@@ -860,7 +922,7 @@ export interface ColumnSlots {
         /**
          * Current sort order state.
          */
-        sortOrder: boolean;
+        sortOrder: number;
     }): VNode[];
     /**
      * Custom header checkbox icon template.

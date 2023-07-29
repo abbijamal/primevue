@@ -1,5 +1,5 @@
 <template>
-    <div :class="cx('root')" v-bind="ptm('root')">
+    <div :class="cx('root')" v-bind="ptm('root')" data-pc-name="dataview">
         <div v-if="$slots.header" :class="cx('header')" v-bind="ptm('header')">
             <slot name="header"></slot>
         </div>
@@ -12,7 +12,7 @@
             :template="paginatorTemplate"
             :rowsPerPageOptions="rowsPerPageOptions"
             :currentPageReportTemplate="currentPageReportTemplate"
-            :class="cx('paginatorTop')"
+            :class="cx('paginator')"
             :alwaysShow="alwaysShowPaginator"
             @page="onPage($event)"
             :unstyled="unstyled"
@@ -47,11 +47,11 @@
             :template="paginatorTemplate"
             :rowsPerPageOptions="rowsPerPageOptions"
             :currentPageReportTemplate="currentPageReportTemplate"
-            :class="cx('paginatorBottom')"
+            :class="cx('paginator')"
             :alwaysShow="alwaysShowPaginator"
             @page="onPage($event)"
             :unstyled="unstyled"
-            :pt="ptm('root')"
+            :pt="ptm('paginator')"
         >
             <template v-if="$slots.paginatorstart" #start>
                 <slot name="paginatorstart"></slot>
@@ -67,9 +67,9 @@
 </template>
 
 <script>
-import BaseDataView from './BaseDataView.vue';
 import Paginator from 'primevue/paginator';
 import { ObjectUtils } from 'primevue/utils';
+import BaseDataView from './BaseDataView.vue';
 
 export default {
     name: 'DataView',

@@ -7,14 +7,16 @@
  * @module progressspinner
  *
  */
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type ProgressSpinnerPassThroughOptionType = ProgressSpinnerPassThroughAttributes | ((options: ProgressSpinnerPassThroughMethodOptions) => ProgressSpinnerPassThroughAttributes) | null | undefined;
+export declare type ProgressSpinnerPassThroughOptionType = ProgressSpinnerPassThroughAttributes | ((options: ProgressSpinnerPassThroughMethodOptions) => ProgressSpinnerPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface ProgressSpinnerPassThroughMethodOptions {
+    instance: any;
     props: ProgressSpinnerProps;
 }
 
@@ -35,6 +37,11 @@ export interface ProgressSpinnerPassThroughOptions {
      * Uses to pass attributes to the circle's DOM element.
      */
     circle?: ProgressSpinnerPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

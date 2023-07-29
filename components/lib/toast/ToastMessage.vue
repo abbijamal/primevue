@@ -1,8 +1,8 @@
 <template>
     <div :class="cx('container')" role="alert" aria-live="assertive" aria-atomic="true" v-bind="ptm('container')">
-        <div :class="cx('content')" v-bind="ptm('content')">
+        <div :class="[cx('content'), message.contentStyleClass]" v-bind="ptm('content')">
             <template v-if="!templates.message">
-                <component :is="templates.icon ? templates.icon : iconComponent.name ? iconComponent : 'span'" :class="cx('icon')" v-bind="ptm('icon')" />
+                <component :is="templates.icon ? templates.icon : iconComponent && iconComponent.name ? iconComponent : 'span'" :class="cx('icon')" v-bind="ptm('icon')" />
                 <div :class="cx('text')" v-bind="ptm('text')">
                     <span :class="cx('summary')" v-bind="ptm('summary')">{{ message.summary }}</span>
                     <div :class="cx('detail')" v-bind="ptm('detail')">{{ message.detail }}</div>
@@ -10,8 +10,8 @@
             </template>
             <component v-else :is="templates.message" :message="message"></component>
             <div v-if="message.closable !== false" v-bind="ptm('buttonContainer')">
-                <button v-ripple :class="cx('button')" type="button" :aria-label="closeAriaLabel" @click="onCloseClick" autofocus v-bind="{ ...closeButtonProps, ...ptm('button') }">
-                    <component :is="templates.closeicon || 'TimesIcon'" :class="cx('buttonIcon')" v-bind="ptm('buttonIcon')" />
+                <button v-ripple :class="cx('closeButton')" type="button" :aria-label="closeAriaLabel" @click="onCloseClick" autofocus v-bind="{ ...closeButtonProps, ...ptm('button'), ...ptm('closeButton') }">
+                    <component :is="templates.closeicon || 'TimesIcon'" :class="[cx('closeIcon'), closeIcon]" v-bind="{ ...ptm('buttonIcon'), ...ptm('closeIcon') }" />
                 </button>
             </div>
         </div>
@@ -19,16 +19,17 @@
 </template>
 
 <script>
+import BaseComponent from 'primevue/basecomponent';
 import CheckIcon from 'primevue/icons/check';
 import ExclamationTriangleIcon from 'primevue/icons/exclamationtriangle';
 import InfoCircleIcon from 'primevue/icons/infocircle';
 import TimesIcon from 'primevue/icons/times';
 import TimesCircleIcon from 'primevue/icons/timescircle';
 import Ripple from 'primevue/ripple';
-import BaseComponent from 'primevue/basecomponent';
 
 export default {
     name: 'ToastMessage',
+    hostName: 'Toast',
     extends: BaseComponent,
     emits: ['close'],
     closeTimeout: null,

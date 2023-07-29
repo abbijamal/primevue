@@ -8,18 +8,22 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
+import { ColumnPassThroughOptionType } from '../column';
 import { PaginatorPassThroughOptionType } from '../paginator';
 import { TreeNode } from '../tree';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type TreeTablePassThroughOptionType = TreeTablePassThroughAttributes | ((options: TreeTablePassThroughMethodOptions) => TreeTablePassThroughAttributes) | null | undefined;
+export declare type TreeTablePassThroughOptionType = TreeTablePassThroughAttributes | ((options: TreeTablePassThroughMethodOptions) => TreeTablePassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface TreeTablePassThroughMethodOptions {
+    instance: any;
     props: TreeTableProps;
     state: TreeTableState;
+    context: TreeTableContext;
 }
 
 /**
@@ -211,21 +215,21 @@ export interface TreeTablePassThroughOptions {
      */
     headerRow?: TreeTablePassThroughOptionType;
     /**
-     * Uses to pass attributes to the header cell's DOM element.
-     */
-    headerCell?: TreeTablePassThroughOptionType;
-    /**
      * Uses to pass attributes to the tbody's DOM element.
      */
     tbody?: TreeTablePassThroughOptionType;
+    /**
+     * Uses to pass attributes to the row's DOM element.
+     */
+    row?: TreeTablePassThroughOptionType;
     /**
      * Uses to pass attributes to the empty message's DOM element.
      */
     emptyMessage?: TreeTablePassThroughOptionType;
     /**
-     * Uses to pass attributes to the body cell's DOM element.
+     * Uses to pass attributes to the empty message cell's DOM element.
      */
-    bodyCell?: TreeTablePassThroughOptionType;
+    emptyMessageCell?: TreeTablePassThroughOptionType;
     /**
      * Uses to pass attributes to the tfoot's DOM element.
      */
@@ -242,6 +246,15 @@ export interface TreeTablePassThroughOptions {
      * Uses to pass attributes to the resize helper's DOM element.
      */
     resizeHelper?: TreeTablePassThroughOptionType;
+    /**
+     * Uses to pass attributes to the Column helper components.
+     */
+    column?: ColumnPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -308,6 +321,31 @@ export interface TreeTableState {
      * @defaultValue false
      */
     d_editing: boolean;
+}
+
+/**
+ * Defines current options in TreeTable component.
+ */
+export interface TreeTableContext {
+    /**
+     * Current index state of the item.
+     */
+    index: number;
+    /**
+     * Current frozen state of the row as a boolean.
+     * @defaultValue false
+     */
+    frozen: boolean;
+    /**
+     * Current selectable state of the row as a boolean.
+     * @defaultValue false
+     */
+    selectable: boolean;
+    /**
+     * Current selected state of the row as a boolean.
+     * @defaultValue false
+     */
+    selected: boolean;
 }
 
 /**
@@ -510,6 +548,10 @@ export interface TreeTableProps {
      */
     responsiveLayout?: 'stack' | 'scroll' | undefined;
     /**
+     * Defines the size of the table.
+     */
+    size?: 'small' | 'large' | undefined;
+    /**
      * Props to pass to the table element.
      */
     tableProps?: any | undefined;
@@ -518,6 +560,11 @@ export interface TreeTableProps {
      * @type {TreeTablePassThroughOptions}
      */
     pt?: TreeTablePassThroughOptions;
+    /**
+     * When enabled, it removes component related styles in the core.
+     * @defaultValue false
+     */
+    unstyled?: boolean;
 }
 
 /**

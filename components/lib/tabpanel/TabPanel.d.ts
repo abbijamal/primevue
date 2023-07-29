@@ -8,15 +8,17 @@
  *
  */
 import { AnchorHTMLAttributes, HTMLAttributes, LiHTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { TabViewPassThroughOptions } from '../tabview';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type TabPanelPassThroughOptionType = TabPanelPassThroughAttributes | ((options: TabPanelPassThroughMethodOptions) => TabPanelPassThroughAttributes) | null | undefined;
+export declare type TabPanelPassThroughOptionType = TabPanelPassThroughAttributes | ((options: TabPanelPassThroughMethodOptions) => TabPanelPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface TabPanelPassThroughMethodOptions {
+    instance: any;
     props: TabPanelProps;
     parent: TabViewPassThroughOptions;
     context: TabPanelContext;
@@ -47,6 +49,11 @@ export interface TabPanelPassThroughOptions {
      * Uses to pass attributes to the list's DOM element.
      */
     content?: TabPanelPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 export interface TabPanelPassThroughAttributes {
@@ -112,6 +119,22 @@ export interface TabPanelContext {
      * Current index of the tab.
      */
     index: number;
+    /**
+     * Count of tabs
+     */
+    count: number;
+    /**
+     * Whether the tab is first.
+     */
+    first: boolean;
+    /**
+     * Whether the tab is last.
+     */
+    last: boolean;
+    /**
+     * Whether the tab is active.
+     */
+    active: boolean;
 }
 
 /**

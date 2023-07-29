@@ -9,15 +9,17 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { MenuItem } from '../menuitem';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type ContextMenuPassThroughOptionType = ContextMenuPassThroughAttributes | ((options: ContextMenuPassThroughMethodOptions) => ContextMenuPassThroughAttributes) | null | undefined;
+export declare type ContextMenuPassThroughOptionType = ContextMenuPassThroughAttributes | ((options: ContextMenuPassThroughMethodOptions) => ContextMenuPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface ContextMenuPassThroughMethodOptions {
+    instance: any;
     props: ContextMenuProps;
     state: ContextMenuState;
     context: ContextMenuContext;
@@ -68,6 +70,11 @@ export interface ContextMenuPassThroughOptions {
      * Uses to pass attributes to the submenu's DOM element.
      */
     submenu?: ContextMenuPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -134,6 +141,14 @@ export interface ContextMenuState {
  * Defines current options in ContextMenu component.
  */
 export interface ContextMenuContext {
+    /**
+     * Current menuitem
+     */
+    item: any;
+    /**
+     * Index of the menuitem
+     */
+    index: number;
     /**
      * Current active state of menuitem as a boolean.
      * @defaultValue false

@@ -8,14 +8,16 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type TreePassThroughOptionType = TreePassThroughAttributes | ((options: TreePassThroughMethodOptions) => TreePassThroughAttributes) | null | undefined;
+export declare type TreePassThroughOptionType = TreePassThroughAttributes | ((options: TreePassThroughMethodOptions) => TreePassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface TreePassThroughMethodOptions {
+    instance: any;
     props: TreeProps;
     state: TreeState;
     context: TreeContext;
@@ -111,14 +113,6 @@ export interface TreePassThroughOptions {
      */
     root?: TreePassThroughOptionType;
     /**
-     * Uses to pass attributes to the loading overlay's DOM element.
-     */
-    loadingOverlay?: TreePassThroughOptionType;
-    /**
-     * Uses to pass attributes to the loading icon's DOM element.
-     */
-    loadingIcon?: TreePassThroughOptionType;
-    /**
      * Uses to pass attributes to the filter container's DOM element.
      */
     filterContainer?: TreePassThroughOptionType;
@@ -178,6 +172,19 @@ export interface TreePassThroughOptions {
      * Uses to pass attributes to the subgroup's DOM element.
      */
     subgroup?: TreePassThroughOptionType;
+    /**
+     * Uses to pass attributes to the loading overlay's DOM element.
+     */
+    loadingOverlay?: TreePassThroughOptionType;
+    /**
+     * Uses to pass attributes to the loading icon's DOM element.
+     */
+    loadingIcon?: TreePassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -206,6 +213,10 @@ export interface TreeState {
  */
 export interface TreeContext {
     /**
+     * Index of the node.
+     */
+    index: number;
+    /**
      * Current expanded state of the node as a boolean.
      * @defaultValue false
      */
@@ -220,6 +231,11 @@ export interface TreeContext {
      * @defaultValue false
      */
     checked: boolean;
+    /**
+     * Current leaf state of the node as a boolean.
+     * @defaultValue false
+     */
+    leaf: boolean;
 }
 
 /**

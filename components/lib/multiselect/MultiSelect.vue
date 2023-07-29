@@ -1,6 +1,6 @@
 <template>
     <div ref="container" :class="cx('root')" @click="onContainerClick" v-bind="ptm('root')" data-pc-name="multiselect">
-        <div :class="cx('hiddenInputWrapper')" :style="sx('hiddenAccessible', isUnstyled)" v-bind="ptm('hiddenInputWrapper')" :data-p-hidden-accessible="true">
+        <div class="p-hidden-accessible" v-bind="ptm('hiddenInputWrapper')" :data-p-hidden-accessible="true">
             <input
                 ref="focusInput"
                 :id="inputId"
@@ -19,7 +19,7 @@
                 @focus="onFocus"
                 @blur="onBlur"
                 @keydown="onKeyDown"
-                v-bind="{ ...inputProps, ...ptm('input') }"
+                v-bind="{ ...inputProps, ...ptm('hiddenInput') }"
             />
         </div>
         <div :class="cx('labelContainer')" v-bind="ptm('labelContainer')">
@@ -43,10 +43,10 @@
                 </slot>
             </div>
         </div>
-        <div :class="cx('trigger')" v-bind="ptm('triggger')">
-            <slot v-if="loading" name="loadingicon" :class="cx('triggerIcon')">
-                <span v-if="loadingIcon" :class="[cx('triggerIcon'), 'pi-spin', loadingIcon]" aria-hidden="true" v-bind="ptm('triggerIcon')" />
-                <SpinnerIcon v-else :class="cx('triggerIcon')" spin aria-hidden="true" v-bind="ptm('triggerIcon')" />
+        <div :class="cx('trigger')" v-bind="ptm('trigger')">
+            <slot v-if="loading" name="loadingicon" :class="cx('loadingIcon')">
+                <span v-if="loadingIcon" :class="[cx('loadingIcon'), 'pi-spin', loadingIcon]" aria-hidden="true" v-bind="ptm('loadingIcon')" />
+                <SpinnerIcon v-else :class="cx('loadingIcon')" spin aria-hidden="true" v-bind="ptm('loadingIcon')" />
             </slot>
             <slot v-else name="dropdownicon" :class="cx('dropdownIcon')">
                 <component :is="dropdownIcon ? 'span' : 'ChevronDownIcon'" :class="[cx('dropdownIcon'), dropdownIcon]" aria-hidden="true" v-bind="ptm('dropdownIcon')" />
@@ -59,8 +59,7 @@
                         ref="firstHiddenFocusableElementOnOverlay"
                         role="presentation"
                         aria-hidden="true"
-                        :class="cx('hiddenFirstFocusableEl')"
-                        :style="sx('hiddenAccessible', isUnstyled)"
+                        class="p-hidden-accessible p-hidden-focusable"
                         :tabindex="0"
                         @focus="onFirstHiddenFocus"
                         v-bind="ptm('hiddenFirstFocusableEl')"
@@ -70,12 +69,12 @@
                     <slot name="header" :value="modelValue" :options="visibleOptions"></slot>
                     <div v-if="(showToggleAll && selectionLimit == null) || filter" :class="cx('header')" v-bind="ptm('header')">
                         <div v-if="showToggleAll && selectionLimit == null" :class="cx('headerCheckboxContainer')" @click="onToggleAll" v-bind="ptm('headerCheckboxContainer')">
-                            <div :class="cx('hiddenInputWrapper')" :style="sx('hiddenAccessible', isUnstyled)" v-bind="ptm('hiddenInputWrapper')" :data-p-hidden-accessible="true">
+                            <div class="p-hidden-accessible" v-bind="ptm('hiddenInputWrapper')" :data-p-hidden-accessible="true">
                                 <input type="checkbox" readonly :checked="allSelected" :aria-label="toggleAllAriaLabel" @focus="onHeaderCheckboxFocus" @blur="onHeaderCheckboxBlur" v-bind="ptm('headerCheckbox')" />
                             </div>
                             <div :class="cx('headerCheckbox')" v-bind="getHeaderCheckboxPTOptions('headerCheckbox')">
                                 <slot name="headercheckboxicon" :allSelected="allSelected" :class="cx('headerCheckboxIcon')">
-                                    <component :is="checkboxIcon ? 'span' : 'CheckIcon'" :class="[cx('headerCheckboxIcon'), { [checkboxIcon]: allSelected }]" v-bind="getHeaderCheckboxPTOptions('headerCheckboxIcon')" />
+                                    <component v-show="allSelected" :is="checkboxIcon ? 'span' : 'CheckIcon'" :class="[cx('headerCheckboxIcon'), { [checkboxIcon]: allSelected }]" v-bind="getHeaderCheckboxPTOptions('headerCheckboxIcon')" />
                                 </slot>
                             </div>
                         </div>
@@ -100,7 +99,7 @@
                                 <component :is="filterIcon ? 'span' : 'SearchIcon'" :class="[cx('filterIcon'), filterIcon]" v-bind="ptm('filterIcon')" />
                             </slot>
                         </div>
-                        <span v-if="filter" role="status" aria-live="polite" :class="cx('hiddenFilterResult')" :style="sx('hiddenAccessible', isUnstyled)" v-bind="ptm('hiddenFilterResult')" :data-p-hidden-accessible="true">
+                        <span v-if="filter" role="status" aria-live="polite" class="p-hidden-accessible" v-bind="ptm('hiddenFilterResult')" :data-p-hidden-accessible="true">
                             {{ filterResultMessageText }}
                         </span>
                         <button v-ripple :class="cx('closeButton')" :aria-label="closeAriaLabel" @click="onCloseClick" type="button" v-bind="{ ...closeButtonProps, ...ptm('closeButton') }">
@@ -140,6 +139,7 @@
                                                 <div :class="cx('checkbox', { option })" v-bind="getCheckboxPTOptions(option, getItemOptions, i, 'checkbox')">
                                                     <slot name="itemcheckboxicon" :selected="isSelected(option)" :class="cx('checkboxIcon')">
                                                         <component
+                                                            v-show="isSelected(option)"
                                                             :is="checkboxIcon ? 'span' : 'CheckIcon'"
                                                             :class="[cx('checkboxIcon'), { [checkboxIcon]: isSelected(option) }]"
                                                             v-bind="getCheckboxPTOptions(option, getItemOptions, i, 'checkboxIcon')"
@@ -166,26 +166,17 @@
                         </VirtualScroller>
                     </div>
                     <slot name="footer" :value="modelValue" :options="visibleOptions"></slot>
-                    <span
-                        v-if="!options || (options && options.length === 0)"
-                        role="status"
-                        aria-live="polite"
-                        :class="cx('hiddenEmptyMessage')"
-                        :style="sx('hiddenAccessible', isUnstyled)"
-                        v-bind="ptm('hiddenEmptyMessage')"
-                        :data-p-hidden-accessible="true"
-                    >
+                    <span v-if="!options || (options && options.length === 0)" role="status" aria-live="polite" class="p-hidden-accessible" v-bind="ptm('hiddenEmptyMessage')" :data-p-hidden-accessible="true">
                         {{ emptyMessageText }}
                     </span>
-                    <span role="status" aria-live="polite" :class="cx('hiddenSelectedMessage')" :style="sx('hiddenAccessible', isUnstyled)" v-bind="ptm('hiddenSelectedMessage')" :data-p-hidden-accessible="true">
+                    <span role="status" aria-live="polite" class="p-hidden-accessible" v-bind="ptm('hiddenSelectedMessage')" :data-p-hidden-accessible="true">
                         {{ selectedMessageText }}
                     </span>
                     <span
                         ref="lastHiddenFocusableElementOnOverlay"
                         role="presentation"
                         aria-hidden="true"
-                        :class="cx('hiddenLastFocusableEl')"
-                        :style="sx('hiddenAccessible', isUnstyled)"
+                        class="p-hidden-accessible p-hidden-focusable"
                         :tabindex="0"
                         @focus="onLastHiddenFocus"
                         v-bind="ptm('hiddenLastFocusableEl')"

@@ -8,14 +8,16 @@
  *
  */
 import { InputHTMLAttributes } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type InputSwitchPassThroughOptionType = InputSwitchPassThroughAttributes | ((options: InputSwitchPassThroughMethodOptions) => InputSwitchPassThroughAttributes) | null | undefined;
+export declare type InputSwitchPassThroughOptionType = InputSwitchPassThroughAttributes | ((options: InputSwitchPassThroughMethodOptions) => InputSwitchPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface InputSwitchPassThroughMethodOptions {
+    instance: any;
     props: InputSwitchProps;
     state: InputSwitchState;
 }
@@ -41,6 +43,11 @@ export interface InputSwitchPassThroughOptions {
      * Uses to pass attributes to the hidden input's DOM element.
      */
     hiddenInput?: InputSwitchPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -106,9 +113,9 @@ export interface InputSwitchProps {
     'aria-label'?: string | undefined;
     /**
      * Uses to pass attributes to DOM elements inside the component.
-     * @type {InputSwitchPassThroughMethodOptions}
+     * @type {InputSwitchPassThroughOptions}
      */
-    pt?: InputSwitchPassThroughMethodOptions;
+    pt?: InputSwitchPassThroughOptions;
     /**
      * When enabled, it removes component related styles in the core.
      * @defaultValue false

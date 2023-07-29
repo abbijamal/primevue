@@ -8,16 +8,19 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { MenuItem } from '../menuitem';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type BreadcrumbPassThroughOptionType = BreadcrumbPassThroughAttributes | ((options: BreadcrumbPassThroughMethodOptions) => BreadcrumbPassThroughAttributes) | null | undefined;
+export declare type BreadcrumbPassThroughOptionType = BreadcrumbPassThroughAttributes | ((options: BreadcrumbPassThroughMethodOptions) => BreadcrumbPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface BreadcrumbPassThroughMethodOptions {
+    instance: any;
     props: BreadcrumbProps;
+    context: BreadcrumbContext;
 }
 
 /**
@@ -57,6 +60,11 @@ export interface BreadcrumbPassThroughOptions {
      * Uses to pass attributes to the separator icon's DOM element.
      */
     separatorIcon?: BreadcrumbPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -64,6 +72,20 @@ export interface BreadcrumbPassThroughOptions {
  */
 export interface BreadcrumbPassThroughAttributes {
     [key: string]: any;
+}
+
+/**
+ * Defines current options in Breadcrumb component.
+ */
+export interface BreadcrumbContext {
+    /**
+     * Current menuitem
+     */
+    item: any;
+    /**
+     * Index of the menuitem
+     */
+    index: number;
 }
 
 /**

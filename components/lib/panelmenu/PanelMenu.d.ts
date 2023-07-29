@@ -8,15 +8,17 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { MenuItem } from '../menuitem';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type PanelMenuPassThroughOptionType = PanelMenuPassThroughAttributes | ((options: PanelMenuPassThroughMethodOptions) => PanelMenuPassThroughAttributes) | null | undefined;
+export declare type PanelMenuPassThroughOptionType = PanelMenuPassThroughAttributes | ((options: PanelMenuPassThroughMethodOptions) => PanelMenuPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface PanelMenuPassThroughMethodOptions {
+    instance: any;
     props: PanelMenuProps;
     state: PanelMenuState;
     context: PanelMenuContext;
@@ -99,6 +101,11 @@ export interface PanelMenuPassThroughOptions {
      * Uses to pass attributes to the separator's DOM element.
      */
     separator?: PanelMenuPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -127,6 +134,14 @@ export interface PanelMenuState {
  * Defines current options in PanelMenu component.
  */
 export interface PanelMenuContext {
+    /**
+     * Current menuitem
+     */
+    item: any;
+    /**
+     * Index of the menuitem.
+     */
+    index: number;
     /**
      * Current active state of menuitem as a boolean.
      * @defaultValue false

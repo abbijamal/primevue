@@ -38,6 +38,7 @@ import { ObjectUtils } from 'primevue/utils';
 
 export default {
     name: 'Menuitem',
+    hostName: 'Menu',
     extends: BaseComponent,
     inheritAttrs: false,
     emits: ['item-click'],
@@ -46,7 +47,8 @@ export default {
         templates: null,
         exact: null,
         id: null,
-        focusedOptionId: null
+        focusedOptionId: null,
+        index: null
     },
     methods: {
         getItemProp(processedItem, name) {
@@ -55,6 +57,8 @@ export default {
         getPTOptions(key) {
             return this.ptm(key, {
                 context: {
+                    item: this.item,
+                    index: this.index,
                     focused: this.isItemFocused()
                 }
             });

@@ -8,13 +8,15 @@
  *
  */
 import { ButtonHTMLAttributes, HTMLAttributes, VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
-export declare type GalleriaPassThroughOptionType = GalleriaPassThroughAttributes | ((options: GalleriaPassThroughMethodOptions) => GalleriaPassThroughAttributes) | null | undefined;
+export declare type GalleriaPassThroughOptionType = GalleriaPassThroughAttributes | ((options: GalleriaPassThroughMethodOptions) => GalleriaPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface GalleriaPassThroughMethodOptions {
+    instance: any;
     props: GalleriaProps;
     state: GalleriaState;
 }
@@ -100,6 +102,10 @@ export interface GalleriaPassThroughOptions {
      */
     indicator?: GalleriaPassThroughOptionType;
     /**
+     * Uses to pass attributes to the indicator button's DOM element.
+     */
+    indicatorButton?: GalleriaPassThroughOptionType;
+    /**
      * Uses to pass attributes to the thumbnail wrapper's DOM element.
      */
     thumbnailWrapper?: GalleriaPassThroughOptionType;
@@ -143,6 +149,11 @@ export interface GalleriaPassThroughOptions {
      * Uses to pass attributes to the mask's DOM element.
      */
     mask?: GalleriaPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

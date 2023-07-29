@@ -5,10 +5,11 @@
         optionLabel="label"
         optionValue="value"
         @update:modelValue="onChange($event)"
-        :class="cx('RPPDropdown')"
+        :class="cx('rowPerPageDropdown')"
         :disabled="disabled"
-        :pt="ptm('RPPDropdown')"
-        data-pc-section="rppdropdown"
+        :unstyled="unstyled"
+        :pt="ptm('rowPerPageDropdown')"
+        data-pc-section="rowperpagedropdown"
     ></RPPDropdown>
 </template>
 
@@ -18,6 +19,7 @@ import Dropdown from 'primevue/dropdown';
 
 export default {
     name: 'RowsPerPageDropdown',
+    hostName: 'Paginator',
     extends: BaseComponent,
     emits: ['rows-change'],
     props: {

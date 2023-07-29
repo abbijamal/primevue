@@ -8,9 +8,19 @@
  *
  */
 import { InputHTMLAttributes } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor, Nullable } from '../ts-helpers';
 
-export declare type InputTextPassThroughOptionType = InputTextPassThroughAttributes | null | undefined;
+export declare type InputTextPassThroughOptionType = InputTextPassThroughAttributes | ((options: InputTextPassThroughMethodOptions) => InputTextPassThroughAttributes | string) | string | null | undefined;
+
+/**
+ * Custom passthrough(pt) option method.
+ */
+export interface InputTextPassThroughMethodOptions {
+    instance: any;
+    props: InputTextProps;
+    context: InputTextContext;
+}
 
 /**
  * Custom passthrough(pt) options.
@@ -21,6 +31,11 @@ export interface InputTextPassThroughOptions {
      * Uses to pass attributes to the root's DOM element.
      */
     root?: InputTextPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -31,6 +46,22 @@ export interface InputTextPassThroughAttributes {
 }
 
 /**
+ * Defines current options in InputText component.
+ */
+export interface InputTextContext {
+    /**
+     * Current filled state of the component as a boolean.
+     * @defaultValue false
+     */
+    filled: boolean;
+    /**
+     * Current disabled state of the component as a boolean.
+     * @defaultValue false
+     */
+    disabled: boolean;
+}
+
+/**
  * Defines valid properties in InputText component.
  */
 export interface InputTextProps extends InputHTMLAttributes {
@@ -38,6 +69,10 @@ export interface InputTextProps extends InputHTMLAttributes {
      * Value of the component.
      */
     modelValue?: Nullable<string>;
+    /**
+     * Defines the size of the component.
+     */
+    size?: 'small' | 'large' | undefined;
     /**
      * Uses to pass attributes to DOM elements inside the component.
      * @type {InputTextPassThroughOptions}

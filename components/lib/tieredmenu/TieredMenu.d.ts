@@ -8,15 +8,17 @@
  *
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { MenuItem } from '../menuitem';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type TieredMenuPassThroughOptionType = TieredMenuPassThroughAttributes | ((options: TieredMenuPassThroughMethodOptions) => TieredMenuPassThroughAttributes) | null | undefined;
+export declare type TieredMenuPassThroughOptionType = TieredMenuPassThroughAttributes | ((options: TieredMenuPassThroughMethodOptions) => TieredMenuPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface TieredMenuPassThroughMethodOptions {
+    instance: any;
     props: TieredMenuProps;
     state: TieredMenuState;
     context: TieredMenuContext;
@@ -67,6 +69,11 @@ export interface TieredMenuPassThroughOptions {
      * Uses to pass attributes to the submenu's DOM element.
      */
     submenu?: TieredMenuPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -128,6 +135,14 @@ export interface TieredMenuState {
  * Defines current options in TieredMenu component.
  */
 export interface TieredMenuContext {
+    /**
+     * Current menuitem
+     */
+    item: any;
+    /**
+     * Index of the menuitem.
+     */
+    index: number;
     /**
      * Current active state of menuitem as a boolean.
      * @defaultValue false

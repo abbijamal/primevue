@@ -7,7 +7,7 @@
                 </div>
                 <button v-if="showCloseIcon" v-ripple :class="cx('closeButton')" :aria-label="closeAriaLabel" type="button" autofocus @click="hide" @keydown="onButtonKeydown" v-bind="ptm('closeButton')">
                     <slot name="closeicon">
-                        <component :is="closeIcon ? 'span' : 'TimesIcon'" :class="cx('closeIcon')" v-bind="ptm('closeIcon')"></component>
+                        <component :is="closeIcon ? 'span' : 'TimesIcon'" :class="[cx('closeIcon'), closeIcon]" v-bind="ptm('closeIcon')"></component>
                     </slot>
                 </button>
             </div>
@@ -16,13 +16,13 @@
 </template>
 
 <script>
-import BaseOverlayPanel from './BaseOverlayPanel.vue';
 import FocusTrap from 'primevue/focustrap';
 import TimesIcon from 'primevue/icons/times';
 import OverlayEventBus from 'primevue/overlayeventbus';
 import Portal from 'primevue/portal';
 import Ripple from 'primevue/ripple';
 import { ConnectedOverlayScrollHandler, DomHandler, UniqueComponentId, ZIndexUtils } from 'primevue/utils';
+import BaseOverlayPanel from './BaseOverlayPanel.vue';
 
 export default {
     name: 'OverlayPanel',
@@ -97,13 +97,13 @@ export default {
         },
         hide() {
             this.visible = false;
-            DomHandler.focus(this.target);
         },
         onContentClick() {
             this.selfClick = true;
         },
         onEnter(el) {
             this.container.setAttribute(this.attributeSelector, '');
+            DomHandler.addStyles(el, { position: 'absolute', top: '0', left: '0' });
             this.alignOverlay();
 
             if (this.dismissable) {
@@ -154,11 +154,15 @@ export default {
             this.container.style.setProperty('--overlayArrowLeft', `${arrowLeft}px`);
 
             if (containerOffset.top < targetOffset.top) {
+                this.container.setAttribute('data-p-overlaypanel-flipped', 'true');
                 !this.isUnstyled && DomHandler.addClass(this.container, 'p-overlaypanel-flipped');
             }
         },
         onContentKeydown(event) {
-            event.code === 'Escape' && this.hide();
+            if (event.code === 'Escape') {
+                this.hide();
+                DomHandler.focus(this.target);
+            }
         },
         onButtonKeydown(event) {
             switch (event.code) {
@@ -239,7 +243,7 @@ export default {
             this.container = el;
         },
         createStyle() {
-            if (!this.styleElement) {
+            if (!this.styleElement && !this.isUnstyled) {
                 this.styleElement = document.createElement('style');
                 this.styleElement.type = 'text/css';
                 document.head.appendChild(this.styleElement);

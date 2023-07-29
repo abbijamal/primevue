@@ -8,14 +8,16 @@
  *
  */
 import { CanvasHTMLAttributes } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type ChartPassThroughOptionType = ChartPassThroughAttributes | ((options: ChartPassThroughMethodOptions) => ChartPassThroughAttributes) | null | undefined;
+export declare type ChartPassThroughOptionType = ChartPassThroughAttributes | ((options: ChartPassThroughMethodOptions) => ChartPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface ChartPassThroughMethodOptions {
+    instance: any;
     props: ChartProps;
 }
 
@@ -32,6 +34,11 @@ export interface ChartPassThroughOptions {
      * Uses to pass attributes to the canvas's DOM element.
      */
     canvas?: ChartPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**

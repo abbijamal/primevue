@@ -5,15 +5,17 @@
  * [Live Demo](https://www.primevue.org/datatable/)
  * @module columngroup
  */
+import { ComponentHooks } from '../basecomponent';
 import { DataTablePassThroughOptions } from '../datatable';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type ColumnGroupPassThroughOptionType = ColumnGroupPassThroughAttributes | ((options: ColumnGroupPassThroughMethodOptions) => ColumnGroupPassThroughAttributes) | null | undefined;
+export declare type ColumnGroupPassThroughOptionType = ColumnGroupPassThroughAttributes | ((options: ColumnGroupPassThroughMethodOptions) => ColumnGroupPassThroughAttributes | string) | string | null | undefined;
 
 /**
  * Custom passthrough(pt) option method.
  */
 export interface ColumnGroupPassThroughMethodOptions {
+    instance: any;
     props: ColumnGroupProps;
     parent: DataTablePassThroughOptions;
     context: ColumnGroupContext;
@@ -28,6 +30,11 @@ export interface ColumnGroupPassThroughOptions {
      * Uses to pass attributes to the root's DOM element.
      */
     root?: ColumnGroupPassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -65,6 +72,11 @@ export interface ColumnGroupContext {
      * Current type of the column group.
      */
     type: string;
+    /**
+     * Current scrollable state of column group as a boolean.
+     * @defaultValue false
+     */
+    scrollable: boolean;
 }
 
 /**

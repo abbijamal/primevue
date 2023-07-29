@@ -7,9 +7,19 @@
  * @module timeline
  */
 import { VNode } from 'vue';
+import { ComponentHooks } from '../basecomponent';
 import { ClassComponent, GlobalComponentConstructor } from '../ts-helpers';
 
-export declare type TimelinePassThroughOptionType = TimelinePassThroughAttributes | null | undefined;
+export declare type TimelinePassThroughOptionType = TimelinePassThroughAttributes | ((options: TimelinePassThroughMethodOptions) => TimelinePassThroughAttributes | string) | string | null | undefined;
+
+/**
+ * Custom passthrough(pt) option method.
+ */
+export interface TimelinePassThroughMethodOptions {
+    instance: any;
+    props: TimelineProps;
+    context: TimelineContext;
+}
 
 /**
  * Custom passthrough(pt) options.
@@ -44,6 +54,11 @@ export interface TimelinePassThroughOptions {
      * Uses to pass attributes to the content's DOM element.
      */
     content?: TimelinePassThroughOptionType;
+    /**
+     * Uses to manage all lifecycle hooks
+     * @see {@link BaseComponent.ComponentHooks}
+     */
+    hooks?: ComponentHooks;
 }
 
 /**
@@ -51,6 +66,16 @@ export interface TimelinePassThroughOptions {
  */
 export interface TimelinePassThroughAttributes {
     [key: string]: any;
+}
+
+/**
+ * Defines current options in Timeline component.
+ */
+export interface TimelineContext {
+    /**
+     * Current index of the item as a number.
+     */
+    index: number;
 }
 
 /**

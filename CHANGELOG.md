@@ -1,6 +1,93 @@
 # Changelog
 
-[3.29.2](https://github.com/primefaces/primevue/tree/3.29.2) (2023-05-31)
+## [3.31.0](https://github.com/primefaces/primevue/tree/3.31.0) (2023-07-25)
+
+**Implemented New Features and Enhancements:**
+
+- Tailwind Theme for Unstyled Mode [\#4205](https://github.com/primefaces/primevue/issues/4205)
+- PT context improvements  [\#4196](https://github.com/primefaces/primevue/issues/4196)
+- Add item parameter to menuitem options for pt property [\#4190](https://github.com/primefaces/primevue/issues/4190)
+
+**Fixed bugs:**
+
+- Bootstrap: Breadcrumb icon fix [\#4195](https://github.com/primefaces/primevue/issues/4195)
+- CascadeSelect unstyled mode defect [\#4192](https://github.com/primefaces/primevue/issues/4192)
+- InputSwitch: pt prop has incorrect type [\#4187](https://github.com/primefaces/primevue/issues/4187)
+- TabView: ID used in aria-controls does not exist on panel content div [\#4181](https://github.com/primefaces/primevue/issues/4181)
+- Dropdown: default optionLabel and default optionValue are null \(but doc say, default to label and value\) [\#4174](https://github.com/primefaces/primevue/issues/4174)
+- Image: Preview not closing on escape click [\#4089](https://github.com/primefaces/primevue/issues/4089)
+
+## [3.30.2](https://github.com/primefaces/primevue/tree/3.30.2) (2023-07-20)
+
+[Full Changelog](https://github.com/primefaces/primevue/compare/3.30.1...3.30.2)
+
+**Implemented New Features and Enhancements:**
+
+- Rename `button` and `buttonIcon` pt options with `closeButton` and `closeIcon` options in Message and Toast [\#4159](https://github.com/primefaces/primevue/issues/4159)
+- DataTable & TreeTable: new `size` property [\#4156](https://github.com/primefaces/primevue/issues/4156)
+- Improve `pt` syntax for 'class' definitions [\#4150](https://github.com/primefaces/primevue/issues/4150)
+- PT context improvements [\#4149](https://github.com/primefaces/primevue/issues/4149)
+
+**Fixed bugs:**
+
+- TabMenu: disabled item defect & accessibility improvements [\#4169](https://github.com/primefaces/primevue/issues/4169)
+- OverlayPanel: Toggle on list of focusable elements forces screen jump [\#4167](https://github.com/primefaces/primevue/issues/4167)
+- Global pt implementation defects [\#4163](https://github.com/primefaces/primevue/issues/4163)
+- Multiselect: Custom checkbox render issue  [\#4152](https://github.com/primefaces/primevue/issues/4152)
+
+## [3.30.1](https://github.com/primefaces/primevue/tree/3.30.1) (2023-07-14)
+
+[Full Changelog](https://github.com/primefaces/primevue/compare/3.30.0...3.30.1)
+
+**Implemented New Features and Enhancements:**
+
+- Button: remove margin from default style [\#4139](https://github.com/primefaces/primevue/issues/4139)
+- Improve `pt` options on components that use helper component [\#4136](https://github.com/primefaces/primevue/issues/4136)
+- Pass Through Props: Syntactic improvement suggestion [\#4125](https://github.com/primefaces/primevue/issues/4125)
+- PT context improvements [\#4124](https://github.com/primefaces/primevue/issues/4124)
+
+**Fixed bugs:**
+
+- TreeTable: Sorting does not work when clicking at the header title [\#4138](https://github.com/primefaces/primevue/issues/4138)
+- Selection\(multiple and single\) not working in TreeTable [\#4133](https://github.com/primefaces/primevue/issues/4133)
+- The types in PrimeVue config are not accessible [\#4122](https://github.com/primefaces/primevue/issues/4122)
+- Browser CDN mode is not working as expected [\#4121](https://github.com/primefaces/primevue/issues/4121)
+- TypeScript: changeTheme is not declared [\#4118](https://github.com/primefaces/primevue/issues/4118)
+- Panel: Wrong prop type in `header` slot [\#4086](https://github.com/primefaces/primevue/issues/4086)
+
+## [3.30.0](https://github.com/primefaces/primevue/tree/3.30.0) (2023-07-10)
+
+[Full Changelog](https://github.com/primefaces/primevue/compare/3.29.2...3.30.0)
+
+**Implemented New Features and Enhancements:**
+
+- InputText: `size` property [\#4106](https://github.com/primefaces/primevue/issues/4106)
+- Add `hooks` keyword to `pt` options to access all lifecycle methods on components and directives [\#4103](https://github.com/primefaces/primevue/issues/4103)
+- Pass all emits to templates on DynamicDialog  [\#4102](https://github.com/primefaces/primevue/issues/4102)
+- Improve `pt` options on components that use helper component [\#3983](https://github.com/primefaces/primevue/issues/3983)
+- Add `unstyled` mode for all components [\#3965](https://github.com/primefaces/primevue/issues/3965)
+
+**Fixed bugs:**
+
+- Button: Button width is to small when have a icon and a badge only [\#4083](https://github.com/primefaces/primevue/issues/4083)
+- SplitButton: aria-expanded not set correctly [\#4065](https://github.com/primefaces/primevue/issues/4065)
+- Toast: Crashing when no severity value is provided [\#4063](https://github.com/primefaces/primevue/issues/4063)
+- Positioning defect PrimeVue Button with icon slot  [\#4042](https://github.com/primefaces/primevue/issues/4042)
+- Tooltip: showDelay still triggers Tooltip when original element is removed [\#4029](https://github.com/primefaces/primevue/issues/4029)
+- tooltip: hideDelay is not defined [\#4025](https://github.com/primefaces/primevue/issues/4025)
+- `pt` implementation defects [\#4024](https://github.com/primefaces/primevue/issues/4024)
+- FocusTrap.js writes to read-only property `classList` which causes test failures under happy-dom [\#4015](https://github.com/primefaces/primevue/issues/4015)
+- The `getScrollableParents` method throws a exception in shadow dom [\#4014](https://github.com/primefaces/primevue/issues/4014)
+- TreeTable: event propagation issue [\#4010](https://github.com/primefaces/primevue/issues/4010)
+- Dynamic clipPath support for icons [\#3959](https://github.com/primefaces/primevue/issues/3959)
+- Accordion: pt options for root applied twice [\#3955](https://github.com/primefaces/primevue/issues/3955)
+- InputNumber: Incorrect formatting when in decimal mode with a suffix \(maybe all the time\) [\#3382](https://github.com/primefaces/primevue/issues/3382)
+
+**Deprecated:**
+
+- The `primevue[.min].css` has been deprecated [\#4110](https://github.com/primefaces/primevue/issues/4110)
+
+## [3.29.2](https://github.com/primefaces/primevue/tree/3.29.2) (2023-05-31)
 
 [Full Changelog](https://github.com/primefaces/primevue/compare/3.29.1...3.29.2)
 
@@ -8,7 +95,7 @@
 
 - Datatable: Custom checkbox render issue [\#4003](https://github.com/primefaces/primevue/issues/4003)
 
-[3.29.1](https://github.com/primefaces/primevue/tree/3.29.1) (2023-05-15)
+## [3.29.1](https://github.com/primefaces/primevue/tree/3.29.1) (2023-05-15)
 
 [Full Changelog](https://github.com/primefaces/primevue/compare/3.29.0...3.29.1)
 

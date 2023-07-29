@@ -30,7 +30,7 @@
         />
         <component v-else-if="column.children && column.children.body && !column.children.editor && d_editing" :is="column.children.body" :data="editingRowData" :column="column" :field="field" :index="rowIndex" :frozenRow="frozenRow" />
         <template v-else-if="columnProp('selectionMode')">
-            <DTRadioButton v-if="columnProp('selectionMode') === 'single'" :value="rowData" :name="name" :checked="selected" @change="toggleRowWithRadio($event, rowIndex)" :column="column" :pt="pt" />
+            <DTRadioButton v-if="columnProp('selectionMode') === 'single'" :value="rowData" :name="name" :checked="selected" @change="toggleRowWithRadio($event, rowIndex)" :column="column" :index="index" :unstyled="unstyled" :pt="pt" />
             <DTCheckbox
                 v-else-if="columnProp('selectionMode') === 'multiple'"
                 :value="rowData"
@@ -39,13 +39,15 @@
                 :aria-selected="selected ? true : undefined"
                 @change="toggleRowWithCheckbox($event, rowIndex)"
                 :column="column"
+                :index="index"
+                :unstyled="unstyled"
                 :pt="pt"
             />
         </template>
         <template v-else-if="columnProp('rowReorder')">
             <component v-if="column.children && column.children.rowreordericon" :is="column.children.rowreordericon" :class="cx('rowReorderIcon')" />
-            <i v-else-if="columnProp('rowReorderIcon')" :class="[cx('rowReorderIcon'), columnProp('rowReorderIcon')]" />
-            <BarsIcon v-else :class="cx('rowReorderIcon')" data-pc-section="rowreordericon" />
+            <i v-else-if="columnProp('rowReorderIcon')" :class="[cx('rowReorderIcon'), columnProp('rowReorderIcon')]" v-bind="getColumnPT('rowReorderIcon')" />
+            <BarsIcon v-else :class="cx('rowReorderIcon')" v-bind="getColumnPT('rowReorderIcon')" />
         </template>
         <template v-else-if="columnProp('expander')">
             <button v-ripple :class="cx('rowToggler')" type="button" :aria-expanded="isRowExpanded" :aria-controls="ariaControls" :aria-label="expandButtonAriaLabel" @click="toggleRow" v-bind="getColumnPT('rowToggler')">
@@ -84,11 +86,13 @@ import TimesIcon from 'primevue/icons/times';
 import OverlayEventBus from 'primevue/overlayeventbus';
 import Ripple from 'primevue/ripple';
 import { DomHandler, ObjectUtils } from 'primevue/utils';
+import { mergeProps } from 'vue';
 import RowCheckbox from './RowCheckbox.vue';
 import RowRadioButton from './RowRadioButton.vue';
 
 export default {
     name: 'BodyCell',
+    hostName: 'DataTable',
     extends: BaseComponent,
     emits: ['cell-edit-init', 'cell-edit-complete', 'cell-edit-cancel', 'row-edit-init', 'row-edit-save', 'row-edit-cancel', 'row-toggle', 'radio-change', 'checkbox-change', 'editing-meta-change'],
     props: {
@@ -210,11 +214,13 @@ export default {
                     state: this.$data
                 },
                 context: {
-                    index: this.index
+                    index: this.index,
+                    size: this.$parentInstance?.$parentInstance?.size,
+                    showGridlines: this.$parentInstance?.$parentInstance?.showGridlines
                 }
             };
 
-            return { ...this.ptm(`column.${key}`, { column: columnMetaData }), ...this.ptmo(this.getColumnProp(), key, columnMetaData) };
+            return mergeProps(this.ptm(`column.${key}`, { column: columnMetaData }), this.ptm(`column.${key}`, columnMetaData), this.ptmo(this.getColumnProp(), key, columnMetaData));
         },
         getColumnProp() {
             return this.column.props && this.column.props.pt ? this.column.props.pt : undefined;

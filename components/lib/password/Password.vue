@@ -20,6 +20,7 @@
             @keyup="onKeyUp"
             @invalid="onInvalid"
             v-bind="{ ...inputProps, ...ptm('input') }"
+            :unstyled="unstyled"
         />
         <slot v-if="toggleMask && unmasked" name="hideicon" :onClick="onMaskToggle">
             <component :is="hideIcon ? 'i' : 'EyeSlashIcon'" :class="hideIcon" @click="onMaskToggle" v-bind="ptm('hideIcon')" />
@@ -27,7 +28,7 @@
         <slot v-if="toggleMask && !unmasked" name="showicon" :onClick="onMaskToggle">
             <component :is="showIcon ? 'i' : 'EyeIcon'" :class="showIcon" @click="onMaskToggle" v-bind="ptm('showIcon')" />
         </slot>
-        <span :class="cx('hiddenAccesible')" :style="sx('hiddenAccessible', isUnstyled)" aria-live="polite" v-bind="ptm('hiddenAccesible')" :data-p-hidden-accessible="true">
+        <span class="p-hidden-accessible" aria-live="polite" v-bind="ptm('hiddenAccesible')" :data-p-hidden-accessible="true">
             {{ infoText }}
         </span>
         <Portal :appendTo="appendTo">

@@ -4,7 +4,6 @@ import { useStyle } from 'primevue/usestyle';
 
 const styles = `
 .p-toast {
-    position: fixed;
     width: 25rem;
 }
 
@@ -17,41 +16,15 @@ const styles = `
     flex: 1 1 auto;
 }
 
-.p-toast-top-right {
-    top: 20px;
-    right: 20px;
-}
-
-.p-toast-top-left {
-    top: 20px;
-    left: 20px;
-}
-
-.p-toast-bottom-left {
-    bottom: 20px;
-    left: 20px;
-}
-
-.p-toast-bottom-right {
-    bottom: 20px;
-    right: 20px;
-}
-
 .p-toast-top-center {
-    top: 20px;
-    left: 50%;
     transform: translateX(-50%);
 }
 
 .p-toast-bottom-center {
-    bottom: 20px;
-    left: 50%;
     transform: translateX(-50%);
 }
 
 .p-toast-center {
-    left: 50%;
-    top: 50%;
     min-width: 20vw;
     transform: translate(-50%, -50%);
 }
@@ -98,6 +71,17 @@ const styles = `
 }
 `;
 
+// Position
+const inlineStyles = {
+    root: ({ position }) => ({
+        position: 'fixed',
+        top: position === 'top-right' || position === 'top-left' || position === 'top-center' ? '20px' : position === 'center' ? '50%' : null,
+        right: (position === 'top-right' || position === 'bottom-right') && '20px',
+        bottom: (position === 'bottom-left' || position === 'bottom-right' || position === 'bottom-center') && '20px',
+        left: position === 'top-left' || position === 'bottom-left' ? '20px' : position === 'center' || position === 'top-center' || position === 'bottom-center' ? '50%' : null
+    })
+};
+
 const classes = {
     root: ({ props, instance }) => [
         'p-toast p-component p-toast-' + props.position,
@@ -108,15 +92,14 @@ const classes = {
     ],
     container: ({ props }) => [
         'p-toast-message',
-        props.message.styleClass,
         {
-            'p-toast-message-info': props.message.severity === 'info',
+            'p-toast-message-info': props.message.severity === 'info' || props.message.severity === undefined,
             'p-toast-message-warn': props.message.severity === 'warn',
             'p-toast-message-error': props.message.severity === 'error',
             'p-toast-message-success': props.message.severity === 'success'
         }
     ],
-    content: ({ props }) => `p-toast-message-content ${props.message.contentStyleClass || ''}`,
+    content: 'p-toast-message-content',
     icon: ({ props }) => [
         'p-toast-message-icon',
         {
@@ -129,11 +112,11 @@ const classes = {
     text: 'p-toast-message-text',
     summary: 'p-toast-summary',
     detail: 'p-toast-detail',
-    button: 'p-toast-icon-close p-link',
-    buttonIcon: ({ props }) => ['p-toast-icon-close-icon', props.closeIcon]
+    closeButton: 'p-toast-icon-close p-link',
+    closeIcon: 'p-toast-icon-close-icon'
 };
 
-const { load: loadStyle } = useStyle(styles, { id: 'primevue_toast_style', manual: true });
+const { load: loadStyle } = useStyle(styles, { name: 'toast', manual: true });
 
 export default {
     name: 'BaseToast',
@@ -186,6 +169,7 @@ export default {
     },
     css: {
         classes,
+        inlineStyles,
         loadStyle
     },
     provide() {
